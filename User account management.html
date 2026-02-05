@@ -20,6 +20,7 @@
         h2 {
             border-bottom: 2px solid #eee;
             padding-bottom: 5px;
+            margin-top: 20px;
         }
         label {
             display:block;
@@ -29,20 +30,18 @@
         input, select , textarea, button {
             width: 100%;
             padding: 8px;
-            margin-top: 50px;
+            margin-top: 5px;
 
         }
     </style>
 </head>
 <body>
 
-</body>
-
 <div class="container">
 
     <!-- User Registration -->
     <h2>User Registration</h2>
-    <form>
+    <form id="registerForm">
         <label for="reg-name">Full Name</label>
         <input type="text" id="reg-name" name="name" required>
 
@@ -58,7 +57,7 @@
 
     <!-- User Login -->
     <h2>User Login</h2>
-    <form>
+    <form id="loginForm">
         <label for="login-email">Email</label>
         <input type="email" id="login-email" name="email" required>
 
@@ -69,25 +68,102 @@
     </form>
 
     <!-- Profile Management -->
-    <h2> Profile Management </h2>
-    <form>
-        <label for="diet">Diet Prefrence</label>
-        <select id="diet" name="diet">
-            <option value="">Select</option>
-            <option value="vegetarian">Vegetarian</option>
-            <option value="vegan">Vegan</option>
-            <option value="pescatarian">Pescatarian</option>
-            <option value="keto">Keto</option>
-            <option value="omnivore">Omnivore</option>
-        </select>
+    <div id="profileSection" class="hidden">
+        <form id="profileForm">
+            <label for="diet">Diet Prefrence</label>
+            <select id="diet" name="diet">
+                <option value="">Select</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="vegan">Vegan</option>
+                <option value="pescatarian">Pescatarian</option>
+                <option value="keto">Keto</option>
+                <option value="omnivore">Omnivore</option>
+            </select>
 
-        <label for="allergies">Allergies</label>
-        <textarea id="allergies" name="allergies" rows="3"
-                  placeholder="e.g. peanuts, dairy, shellfish"></textarea>
+            <label for="allergies">Allergies</label>
+            <textarea id="allergies" name="allergies" rows="3"
+                      placeholder="e.g. peanuts, dairy, shellfish"></textarea>
 
-        <button type="submit">Save Profile</button>
-    </form>
+            <button type="submit">Save Profile</button>
+        </form>
+
+    </div>
 
 </div>
+
+<style>
+    .hidden { display: none; }
+</style>
+
+<script>
+    let currentUserEmail = null;
+
+    // Registration
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('reg-name').value.trim();
+        const email = document.getElementById('reg-email').value.trim().toLowerCase();
+        const password = document.getElementById('reg-password').value;
+
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+
+        if (users[email]) {
+            alert('User already exists!');
+            return;
+        }
+
+        users[email] = { name, email, password, profile: {} };
+        localStorage.setItem('users', JSON.stringify(users));
+        alert('Registration successful!');
+        this.reset();
+    });
+
+    // Login
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value.trim().toLowerCase();
+        const password = document.getElementById('login-password').value;
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+
+        if (!users[email]) {
+            alert('Invalid email!');
+            return;
+        }
+        if (users[email].password !== password) {
+            alert('Incorrect password!');
+            return;
+        }
+
+        currentUserEmail = email;
+        const currentUser = users[email];
+        document.getElementById('profileSection').classList.remove('hidden');
+
+        document.getElementById('diet').value = (currentUser.profile && currentUser.profile.diet) || '';
+        document.getElementById('allergies').value = (currentUser.profile && currentUser.profile.allergies) || '';
+
+        alert('Login successful!');
+        this.reset();
+    });
+
+    // Profile Management and save profile
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!currentUserEmail) {
+            alert('Please log in first!');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        const diet = document.getElementById('diet').value;
+        const allergies = document.getElementById('allergies').value;
+
+        users[currentUserEmail].profile = users[currentUserEmail].profile || {};
+        users[currentUserEmail].profile.diet = diet;
+        users[currentUserEmail].profile.allergies = allergies;
+
+        localStorage.setItem('users', JSON.stringify(users));
+        alert('Profile updated successfully!');
+    });
+</script>
 </body>
 </html>
