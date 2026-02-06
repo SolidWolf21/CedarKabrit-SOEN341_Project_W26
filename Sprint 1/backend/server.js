@@ -3,7 +3,7 @@ const express = require("express");
 
 const app = express();
 const port = process.env.PORT || 3000;
-const frontendDir = path.join(__dirname, "frontend");
+const frontendDir = path.join(__dirname, "..", "frontend");
 
 app.use(express.static(frontendDir));
 
