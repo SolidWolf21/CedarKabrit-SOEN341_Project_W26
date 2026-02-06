@@ -1,12 +1,11 @@
-Issue #,User Story / Task Title,Description / Associated Tasks,Difficulty (0,1,2,3,5,8),Priority,Risk,Assign,Sprint,Due Date
-#1,US.01 - User can register,Signup UI + backend register endpoint + DB users table,5,HIGH,"Medium – password hashing and input validation required","Paul / Emile / Elfried",1,Feb 6 2026
-#4,Task.01 - Signup & home page UI,Frontend signup form and navigation,3,HIGH,"Medium – UI integration","Paul / Emile",1,Feb 6 2026
-#5,Task.02 - Create users table (DB),Users table with unique email and hashed password,2,HIGH,"Low – standard SQL schema","Elfried",1,Feb 6 2026
-#7,Task.04 - POST /register backend endpoint,Register endpoint with validation and hashing,3,HIGH,"Medium – validation errors","Elfried",1,Feb 6 2026
-#2,US.02 - User can login,Login UI + backend authentication,5,HIGH,"High – auth bugs can block demo","Emile / Elfried",1,Feb 6 2026
-#8,Task.05 - POST /login backend endpoint,Credential validation and authentication,3,HIGH,"High – security sensitive","Elfried",1,Feb 6 2026
-#3,US.03 - Manage dietary preferences & allergies,Profile UI + backend update + DB tables,5,MED,"Medium – depends on authentication","Paul / Emile / Elfried",1,Feb 6 2026
-#6,Task.03 - Preferences/allergies tables (DB),Preference tables linked to user_id,3,MED,"Medium – schema design","Elfried",1,Feb 6 2026
-#9,Task.06 - PUT /profile backend endpoint,Update preferences endpoint,3,MED,"Medium – auth dependency","Elfried",1,Feb 6 2026
-#10,Task.07 - Sprint 1 demo smoke test,"Register → Login → Profile demo",2,HIGH,"Medium – integration issues","Team",1,Feb 6 2026
-
+Issue #,User Story / Task Title,Description / Associated Tasks,Difficulty (0-1-2-3-5-8),Priority,Risk,Assign,Sprint,Due Date
+#1,US.01 - User can register,Signup UI + backend register endpoint + DB users table,5,HIGH,"Medium – password hashing and input validation required","Paul / Emile / Elfried",1,"Feb 6 2026"
+#4,Task.01 - Signup & home page UI,Frontend signup form and navigation,3,HIGH,"Medium – UI integration","Paul / Emile",1,"Feb 6 2026"
+#5,Task.02 - Create users table (DB),Users table with unique email and hashed password,2,HIGH,"Low – standard SQL schema","Elfried",1,"Feb 6 2026"
+#7,Task.04 - POST /register backend endpoint,Register endpoint with validation and hashing,3,HIGH,"Medium – validation errors","Elfried",1,"Feb 6 2026"
+#2,US.02 - User can login,Login UI + backend authentication,5,HIGH,"High – auth bugs can block demo","Emile / Elfried",1,"Feb 6 2026"
+#8,Task.05 - POST /login backend endpoint,Credential validation and authentication,3,HIGH,"High – security sensitive","Elfried",1,"Feb 6 2026"
+#3,US.03 - Manage dietary preferences & allergies,Profile UI + backend update + DB tables,5,MED,"Medium – depends on authentication","Paul / Emile / Elfried",1,"Feb 6 2026"
+#6,Task.03 - Preferences/allergies tables (DB),Preference tables linked to user_id,3,MED,"Medium – schema design","Elfried",1,"Feb 6 2026"
+#9,Task.06 - PUT /profile backend endpoint,Update preferences endpoint,3,MED,"Medium – auth dependency","Elfried",1,"Feb 6 2026"
+#10,Task.07 - Sprint 1 demo smoke test,"Register → Login → Profile demo",2,HIGH,"Medium – integration issues","Team",1,"Feb 6 2026"
