@@ -63,17 +63,3 @@ DB_NAME=MealMajors
 4. **Test Connection** and **OK**.
 5. If tables don’t appear, open the **Schemas** tab, check `MealMajors`, then **Synchronize**.
 
-
-# Project Description
-MealMajor is a web application designed to help students efficiently plan their weekly meals, track groceries, and discover easy recipes tailored to their dietary preferences and budget constraints. The platform provides an intuitive interface for managing personalized meal schedules, searching and filtering recipes by various criteria, and maintaining dietary profiles that accommodate allergies and nutritional requirements.
-
-
-# Team Members
-
-| Name | Student ID | Roles |
-|------|------------|-------|
-| Raphael Hadgu | 40285317 | Documentation specialist |
-| Paul Haydn Louisma  | 40285518 | Full Stack Developer |
-| Emile Ghattas | 40282552 | Full Stack Developer |
-| Mia Haidar | 40280890  | Documentation Specialist   |
-| Jeffrey    |     |     |
