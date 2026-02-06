@@ -1,11 +1,1 @@
-Issue #,User story / Task title,Story points,Due date,Associated tasks / description,Priority,Risk,Responsible
-#1,US.01 - User can register,5,2026-02-06,UI signup page + backend register + DB users table,High,Medium,Paul/Emile + Elfried
-#4,Task.01 - Signup & home page UI,3,2026-02-06,Frontend signup and navigation,High,Medium,Emile/Paul
-#5,Task.02 - Create users table (DB),2,2026-02-06,users table with unique email and hashed password,High,Low,Elfried
-#7,Task.04 - POST /register endpoint,3,2026-02-06,Register endpoint with validation and hashing,High,Medium,Elfried
-#2,US.02 - User can login,5,2026-02-06,Login UI + backend login endpoint,High,High,Emile + Elfried
-#8,Task.05 - POST /login endpoint,3,2026-02-06,Credential validation and authentication,High,High,Elfried
-#3,US.03 - Manage dietary preferences/allergies,5,2026-02-06,Profile UI + backend update + DB tables,Medium,Medium,Paul/Emile + Elfried
-#6,Task.03 - Preferences/allergies tables (DB),3,2026-02-06,Preference tables linked to user_id,Medium,Medium,Elfried
-#9,Task.06 - PUT /profile endpoint,3,2026-02-06,Update preferences endpoint,Medium,Medium,Elfried
-#10,Task.07 - Sprint 1 demo smoke test,2,2026-02-06,Register → Login → Profile demo,High,Medium,Team
+
