@@ -49,7 +49,10 @@ form.addEventListener("submit", async (event) => {
         }
 
         localStorage.setItem("userEmail", email);
-        window.location.href = "/";
+        setMessage("Signed in successfully. Redirecting...", "is-success");
+        setTimeout(() => {
+            window.location.href = "/";
+        }, 800);
     } catch (error) {
         setMessage("Network error. Please try again.", "is-error");
     }

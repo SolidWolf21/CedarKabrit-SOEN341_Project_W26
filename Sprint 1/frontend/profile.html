@@ -38,6 +38,17 @@
         <label for="password">New Password (optional)</label>
         <input id="password" name="password" type="password">
 
+        <div class="form-section">
+            <h2>Preferences</h2>
+            <p class="form-subtitle">Select all that apply.</p>
+
+            <label for="dietaryOptions">Dietary Preferences</label>
+            <select id="dietaryOptions" name="dietaryOptions" multiple size="6"></select>
+
+            <label for="allergyOptions">Allergies</label>
+            <select id="allergyOptions" name="allergyOptions" multiple size="6"></select>
+        </div>
+
         <button type="submit">Save Changes</button>
         <p id="formMessage" class="form-message" aria-live="polite"></p>
     </form>

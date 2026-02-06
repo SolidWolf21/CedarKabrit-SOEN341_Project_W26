@@ -10,3 +10,59 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS dietary_options (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS allergy_options (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS user_dietary_preferences (
+    user_id INT NOT NULL,
+    dietary_option_id INT NOT NULL,
+    PRIMARY KEY (user_id, dietary_option_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (dietary_option_id) REFERENCES dietary_options(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS user_allergies (
+    user_id INT NOT NULL,
+    allergy_option_id INT NOT NULL,
+    PRIMARY KEY (user_id, allergy_option_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (allergy_option_id) REFERENCES allergy_options(id) ON DELETE CASCADE
+);
+
+INSERT IGNORE INTO dietary_options (name) VALUES
+    ('Vegetarian'),
+    ('Vegan'),
+    ('Pescatarian'),
+    ('Gluten-Free'),
+    ('Lactose-Free'),
+    ('Keto'),
+    ('Halal'),
+    ('Kosher'),
+    ('Low-Carb'),
+    ('Low-Sodium'),
+    ('Paleo'),
+    ('Plant-Forward'),
+    ('High-Protein'),
+    ('Flexitarian');
+
+INSERT IGNORE INTO allergy_options (name) VALUES
+    ('Peanuts'),
+    ('Tree Nuts'),
+    ('Almonds'),
+    ('Dairy'),
+    ('Eggs'),
+    ('Soy'),
+    ('Wheat'),
+    ('Fish'),
+    ('Shellfish'),
+    ('Sesame'),
+    ('Gluten'),
+    ('Corn');
