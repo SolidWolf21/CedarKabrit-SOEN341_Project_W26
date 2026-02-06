@@ -13,7 +13,7 @@ MealMajor is a web application designed to help students efficiently plan their 
 | Paul Haydn Louisma  | 40285518 | Full Stack Developer |
 | Emile Ghattas | 40282552 | Full Stack Developer |
 | Mia Haidar | 40280890  | Documentation Specialist   |
-| Jeffrey    |     |     |
+| Elfrid Jeffrey Kamdem Sindjoun  | 40315383  |  Backend Developer  |
 
 
 ## Run the project
