@@ -14,3 +14,11 @@
 |------|---------|------|
 | 2026-02-06 | User stories for sprint 1 | 2h |
 | 2026-02-06 | Worked on tasks | 30m |
+
+# Sprint 1 Activity Log — Raphael Hadgu
+
+| Date | Activity | Time |
+|------|---------|------|
+| 2026-02-06 | Read ME file | 1h |
+| 2026-02-06 | Aided Sprint planning (Appendix A) | 30m |
+| 2026-02-06 | Meeting minutes | 30m |
