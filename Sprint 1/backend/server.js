@@ -20,6 +20,10 @@ app.get("/signin", (req, res) => {
     res.sendFile(path.join(frontendDir, "sign-in.html"));
 });
 
+app.get("/profile", (req, res) => {
+    res.sendFile(path.join(frontendDir, "profile.html"));
+});
+
 app.get("/health", (req, res) => {
     res.json({ status: "ok" });
 });
@@ -85,6 +89,80 @@ app.post("/api/signin", async (req, res) => {
         }
 
         return res.json({ message: "Signed in." });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Server error." });
+    }
+});
+
+app.get("/api/profile", async (req, res) => {
+    const email = (req.query.email || "").toString().trim().toLowerCase();
+    const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!email || !emailPattern.test(email)) {
+        return res.status(400).json({ error: "Valid email is required." });
+    }
+
+    try {
+        const pool = require("./db/connection");
+        const [rows] = await pool.execute(
+            "SELECT first_name, last_name, email FROM users WHERE email = ? LIMIT 1",
+            [email]
+        );
+
+        if (!rows || rows.length === 0) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        return res.json({
+            firstName: rows[0].first_name,
+            lastName: rows[0].last_name,
+            email: rows[0].email
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Server error." });
+    }
+});
+
+app.put("/api/profile", async (req, res) => {
+    const { currentEmail, firstName, lastName, email, password } = req.body || {};
+    const normalizedCurrentEmail = (currentEmail || "").toString().trim().toLowerCase();
+    const normalizedEmail = (email || "").toString().trim().toLowerCase();
+    const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+    if (!normalizedCurrentEmail || !emailPattern.test(normalizedCurrentEmail)) {
+        return res.status(400).json({ error: "Valid current email is required." });
+    }
+    if (!firstName || !lastName || !normalizedEmail || !emailPattern.test(normalizedEmail)) {
+        return res.status(400).json({ error: "All fields must be valid." });
+    }
+
+    try {
+        const pool = require("./db/connection");
+        const [dupes] = await pool.execute(
+            "SELECT id FROM users WHERE email = ? AND email <> ? LIMIT 1",
+            [normalizedEmail, normalizedCurrentEmail]
+        );
+
+        if (dupes && dupes.length > 0) {
+            return res.status(409).json({ error: "Email already exists." });
+        }
+
+        if (password) {
+            const bcrypt = require("bcryptjs");
+            const passwordHash = await bcrypt.hash(password, 10);
+            await pool.execute(
+                "UPDATE users SET first_name = ?, last_name = ?, email = ?, password_hash = ? WHERE email = ?",
+                [firstName.trim(), lastName.trim(), normalizedEmail, passwordHash, normalizedCurrentEmail]
+            );
+        } else {
+            await pool.execute(
+                "UPDATE users SET first_name = ?, last_name = ?, email = ? WHERE email = ?",
+                [firstName.trim(), lastName.trim(), normalizedEmail, normalizedCurrentEmail]
+            );
+        }
+
+        return res.json({ message: "Profile updated." });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Server error." });

@@ -3,7 +3,12 @@ const userEmail = localStorage.getItem("userEmail");
 
 if (authMenu && userEmail) {
     authMenu.innerHTML = `
-        <a href="#" id="signOutLink">Sign Out</a>
+        <div class="dropdown">
+            <a class="dropdown__toggle" href="/profile">Profile</a>
+            <div class="dropdown__menu">
+                <a href="#" id="signOutLink">Sign Out</a>
+            </div>
+        </div>
     `;
 
     const signOutLink = document.getElementById("signOutLink");

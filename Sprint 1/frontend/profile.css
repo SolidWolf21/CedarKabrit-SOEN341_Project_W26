@@ -1,0 +1,5 @@
+.profile-readonly {
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
