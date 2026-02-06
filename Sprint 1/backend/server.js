@@ -57,6 +57,40 @@ app.post("/api/signup", async (req, res) => {
     }
 });
 
+app.post("/api/signin", async (req, res) => {
+    const { email, password } = req.body || {};
+    if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required." });
+    }
+    const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!emailPattern.test(email)) {
+        return res.status(400).json({ error: "Email is invalid." });
+    }
+
+    try {
+        const bcrypt = require("bcryptjs");
+        const pool = require("./db/connection");
+        const [rows] = await pool.execute(
+            "SELECT password_hash FROM users WHERE email = ? LIMIT 1",
+            [email.trim().toLowerCase()]
+        );
+
+        if (!rows || rows.length === 0) {
+            return res.status(401).json({ error: "Invalid email or password." });
+        }
+
+        const match = await bcrypt.compare(password, rows[0].password_hash);
+        if (!match) {
+            return res.status(401).json({ error: "Invalid email or password." });
+        }
+
+        return res.json({ message: "Signed in." });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Server error." });
+    }
+});
+
 app.listen(port, () => {
     console.log(`MealMajor server running on http://localhost:${port}`);
 });
