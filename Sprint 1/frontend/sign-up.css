@@ -1,0 +1,38 @@
+.form-card {
+    max-width: 520px;
+    margin: 40px auto 0;
+    padding: 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+}
+
+.form-card h1 {
+    margin: 0 0 6px;
+    font-size: 1.8rem;
+}
+
+.form-subtitle {
+    margin: 0 0 18px;
+    color: var(--muted);
+}
+
+.form-message {
+    margin-top: 12px;
+    font-size: 0.95rem;
+}
+
+.form-message.is-error {
+    color: #b53d2e;
+}
+
+.form-message.is-success {
+    color: #2f6b3e;
+}
+
+@media (max-width: 720px) {
+    .form-card {
+        margin: 24px 16px 0;
+    }
+}

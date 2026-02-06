@@ -4,18 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MealMajor | Home</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <header class="site-header">
-    <div class="brand">MealMajor</div>
-    <nav class="nav">
-        <a href="#">Home</a>
+    <a class="brand" href="/">MealMajor</a>
+    <nav class="nav" id="authMenu">
         <div class="dropdown">
             <span class="dropdown__toggle">Profile</span>
             <div class="dropdown__menu">
-                <a href="sign-in.html">Sign In</a>
-                <a href="sign-up.html">Sign Up</a>
+                <a href="/signin">Sign In</a>
+                <a href="/signup">Sign Up</a>
             </div>
         </div>
     </nav>
@@ -28,5 +27,7 @@
         track groceries, and propose easy recipes.
     </p>
 </main>
+
+<script src="/site.js"></script>
 </body>
 </html>

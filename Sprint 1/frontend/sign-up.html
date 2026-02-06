@@ -4,8 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MealMajor | Sign Up</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/sign-up.css">
 </head>
 <body>
+<header class="site-header">
+    <a class="brand" href="/">MealMajor</a>
+    <nav class="nav" id="authMenu">
+        <div class="dropdown">
+            <span class="dropdown__toggle">Profile</span>
+            <div class="dropdown__menu">
+                <a href="/signin">Sign In</a>
+                <a href="/signup">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="form-card">
+    <h1>Create your account</h1>
+    <p class="form-subtitle">This is a placeholder signup form.</p>
+    <form id="signupForm" novalidate>
+        <label for="firstName">First Name</label>
+        <input id="firstName" name="firstName" type="text" required>
+
+        <label for="lastName">Last Name</label>
+        <input id="lastName" name="lastName" type="text" required>
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required>
+
+        <button type="submit">Sign Up</button>
+        <p id="formMessage" class="form-message" aria-live="polite"></p>
+    </form>
+</main>
+
+<script src="/sign-up.js"></script>
+<script src="/site.js"></script>
 </body>
 </html>
