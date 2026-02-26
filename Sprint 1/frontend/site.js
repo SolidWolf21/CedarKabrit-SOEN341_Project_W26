@@ -1,8 +1,16 @@
 const authMenu = document.getElementById("authMenu");
 const userEmail = localStorage.getItem("userEmail");
-const isHome = window.location.pathname === "/";
 const guestHeroActions = document.getElementById("guestHeroActions");
 const authHeroActions = document.getElementById("authHeroActions");
+const currentPath = window.location.pathname;
+
+if (userEmail && (currentPath === "/signin" || currentPath === "/signup")) {
+    window.location.replace("/profile");
+}
+
+if (!userEmail && currentPath === "/profile") {
+    window.location.replace("/signin");
+}
 
 if (guestHeroActions && authHeroActions) {
     if (userEmail) {
@@ -16,7 +24,6 @@ if (guestHeroActions && authHeroActions) {
 
 if (authMenu && userEmail) {
     authMenu.innerHTML = `
-        <a href="/" class="nav-link ${isHome ? "is-active" : ""}">Home</a>
         <div class="dropdown">
             <a class="dropdown__toggle" href="/profile">Profile</a>
             <div class="dropdown__menu">
