@@ -1,8 +1,8 @@
 const form = document.getElementById("profileForm");
 const message = document.getElementById("formMessage");
 const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-const dietarySelect = document.getElementById("dietaryOptions");
-const allergySelect = document.getElementById("allergyOptions");
+const dietaryGroup = document.getElementById("dietaryOptions");
+const allergyGroup = document.getElementById("allergyOptions");
 
 function setMessage(text, type) {
     message.textContent = text;
@@ -17,21 +17,37 @@ if (!storedEmail) {
     window.location.href = "/signin";
 }
 
-function populateOptions(selectEl, options) {
-    selectEl.innerHTML = "";
+function populateOptions(groupEl, options, inputName) {
+    groupEl.innerHTML = "";
     options.forEach((option) => {
-        const opt = document.createElement("option");
-        opt.value = option.id;
-        opt.textContent = option.name;
-        selectEl.appendChild(opt);
+        const label = document.createElement("label");
+        label.className = "checkbox-item";
+
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.name = inputName;
+        input.value = String(option.id);
+
+        const text = document.createElement("span");
+        text.textContent = option.name;
+
+        label.appendChild(input);
+        label.appendChild(text);
+        groupEl.appendChild(label);
     });
 }
 
-function setSelectedOptions(selectEl, selectedIds) {
+function setSelectedOptions(groupEl, selectedIds) {
     const selectedSet = new Set(selectedIds.map(String));
-    Array.from(selectEl.options).forEach((option) => {
-        option.selected = selectedSet.has(option.value);
+    Array.from(groupEl.querySelectorAll("input[type='checkbox']")).forEach((input) => {
+        input.checked = selectedSet.has(input.value);
     });
+}
+
+function getSelectedOptions(groupEl) {
+    return Array.from(groupEl.querySelectorAll("input[type='checkbox']:checked")).map((input) =>
+        Number(input.value)
+    );
 }
 
 async function loadProfile() {
@@ -63,10 +79,10 @@ async function loadProfile() {
         document.getElementById("lastName").value = profileData.lastName || "";
         document.getElementById("email").value = profileData.email || "";
 
-        populateOptions(dietarySelect, optionsData.dietaryOptions || []);
-        populateOptions(allergySelect, optionsData.allergyOptions || []);
-        setSelectedOptions(dietarySelect, prefsData.dietaryOptionIds || []);
-        setSelectedOptions(allergySelect, prefsData.allergyOptionIds || []);
+        populateOptions(dietaryGroup, optionsData.dietaryOptions || [], "dietaryOptions");
+        populateOptions(allergyGroup, optionsData.allergyOptions || [], "allergyOptions");
+        setSelectedOptions(dietaryGroup, prefsData.dietaryOptionIds || []);
+        setSelectedOptions(allergyGroup, prefsData.allergyOptionIds || []);
     } catch (error) {
         setMessage("Network error. Please try again.", "is-error");
     }
@@ -90,8 +106,8 @@ form.addEventListener("submit", async (event) => {
         return;
     }
 
-    const dietaryOptionIds = Array.from(dietarySelect.selectedOptions).map((opt) => Number(opt.value));
-    const allergyOptionIds = Array.from(allergySelect.selectedOptions).map((opt) => Number(opt.value));
+    const dietaryOptionIds = getSelectedOptions(dietaryGroup);
+    const allergyOptionIds = getSelectedOptions(allergyGroup);
 
     setMessage("Saving...", null);
 

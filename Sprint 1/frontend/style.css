@@ -451,6 +451,39 @@ button:hover {
     min-height: 124px;
 }
 
+.checkbox-group {
+    display: grid;
+    gap: 8px;
+    margin-top: 6px;
+    padding: 12px;
+    border: 1px solid #cbddcc;
+    border-radius: 10px;
+    background: #fdfffc;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 7px 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.checkbox-item:hover {
+    background: #f1f7f2;
+}
+
+.checkbox-item input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--brand);
+    flex-shrink: 0;
+}
+
 @keyframes rise-in {
     from {
         opacity: 0;
