@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MealMajor | Profile</title>
     <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/sign-up.css">
-    <link rel="stylesheet" href="/profile.css">
 </head>
 <body>
 <header class="site-header">
     <a class="brand" href="/">MealMajor</a>
     <nav class="nav" id="authMenu">
+        <a href="/" class="nav-link">Home</a>
         <div class="dropdown">
             <a class="dropdown__toggle" href="/signin">Profile</a>
             <div class="dropdown__menu">
@@ -22,36 +21,49 @@
     </nav>
 </header>
 
-<main class="form-card">
-    <h1>Your profile</h1>
-    <p class="form-subtitle">Update your information below.</p>
-    <form id="profileForm" novalidate>
-        <label for="firstName">First Name</label>
-        <input id="firstName" name="firstName" type="text" required>
+<main class="page-shell auth-layout">
+    <section class="auth-panel">
+        <p class="eyebrow">Account center</p>
+        <h1>Manage your personal profile and food preferences.</h1>
+        <p>Keep your details up to date so your meal suggestions match your diet and allergies.</p>
+        <ul class="auth-points">
+            <li>Select multiple dietary preferences as needed.</li>
+            <li>Track allergies to avoid unsafe recommendations.</li>
+            <li>Save profile changes instantly.</li>
+        </ul>
+    </section>
 
-        <label for="lastName">Last Name</label>
-        <input id="lastName" name="lastName" type="text" required>
+    <section class="form-card">
+        <h1>Your Profile</h1>
+        <p class="form-subtitle">Update your information below.</p>
+        <form id="profileForm" novalidate>
+            <label for="firstName">First Name</label>
+            <input id="firstName" name="firstName" type="text" required>
 
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" required>
+            <label for="lastName">Last Name</label>
+            <input id="lastName" name="lastName" type="text" required>
 
-        <label for="password">New Password (optional)</label>
-        <input id="password" name="password" type="password">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
 
-        <div class="form-section">
-            <h2>Preferences</h2>
-            <p class="form-subtitle">Select all that apply.</p>
+            <label for="password">New Password (optional)</label>
+            <input id="password" name="password" type="password">
 
-            <label for="dietaryOptions">Dietary Preferences</label>
-            <select id="dietaryOptions" name="dietaryOptions" multiple size="6"></select>
+            <div class="form-section">
+                <h2>Preferences</h2>
+                <p class="form-subtitle">Select all that apply.</p>
 
-            <label for="allergyOptions">Allergies</label>
-            <select id="allergyOptions" name="allergyOptions" multiple size="6"></select>
-        </div>
+                <label for="dietaryOptions">Dietary Preferences</label>
+                <select id="dietaryOptions" name="dietaryOptions" multiple size="6"></select>
 
-        <button type="submit">Save Changes</button>
-        <p id="formMessage" class="form-message" aria-live="polite"></p>
-    </form>
+                <label for="allergyOptions">Allergies</label>
+                <select id="allergyOptions" name="allergyOptions" multiple size="6"></select>
+            </div>
+
+            <button type="submit">Save Changes</button>
+            <p id="formMessage" class="form-message" aria-live="polite"></p>
+        </form>
+    </section>
 </main>
 
 <script src="/profile.js"></script>

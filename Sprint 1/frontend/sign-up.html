@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MealMajor | Sign Up</title>
     <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/sign-up.css">
 </head>
 <body>
 <header class="site-header">
     <a class="brand" href="/">MealMajor</a>
     <nav class="nav" id="authMenu">
+        <a href="/" class="nav-link">Home</a>
         <div class="dropdown">
             <a class="dropdown__toggle" href="/signin">Profile</a>
             <div class="dropdown__menu">
@@ -21,25 +21,38 @@
     </nav>
 </header>
 
-<main class="form-card">
-    <h1>Create your account</h1>
-    <p class="form-subtitle">Enter your details to start using MealMajors.</p>
-    <form id="signupForm" novalidate>
-        <label for="firstName">First Name</label>
-        <input id="firstName" name="firstName" type="text" required>
+<main class="page-shell auth-layout">
+    <section class="auth-panel">
+        <p class="eyebrow">Get started</p>
+        <h1>Create your MealMajor account.</h1>
+        <p>Start organizing your weekly meals around your schedule, preferences, and dietary constraints.</p>
+        <ul class="auth-points">
+            <li>Set up your profile in under one minute.</li>
+            <li>Personalize your account to fit your nutrition goals.</li>
+            <li>Use one clean dashboard for your meal workflow.</li>
+        </ul>
+    </section>
 
-        <label for="lastName">Last Name</label>
-        <input id="lastName" name="lastName" type="text" required>
+    <section class="form-card">
+        <h1>Sign Up</h1>
+        <p class="form-subtitle">Enter your details to create your account.</p>
+        <form id="signupForm" novalidate>
+            <label for="firstName">First Name</label>
+            <input id="firstName" name="firstName" type="text" required>
 
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" required>
+            <label for="lastName">Last Name</label>
+            <input id="lastName" name="lastName" type="text" required>
 
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" required>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
 
-        <button type="submit">Sign Up</button>
-        <p id="formMessage" class="form-message" aria-live="polite"></p>
-    </form>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required>
+
+            <button type="submit">Create Account</button>
+            <p id="formMessage" class="form-message" aria-live="polite"></p>
+        </form>
+    </section>
 </main>
 
 <script src="/sign-up.js"></script>
