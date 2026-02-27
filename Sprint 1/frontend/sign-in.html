@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MealMajor | Sign In</title>
     <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="/sign-up.css">
 </head>
 <body>
 <header class="site-header">
     <a class="brand" href="/">MealMajor</a>
     <nav class="nav" id="authMenu">
         <div class="dropdown">
-            <a class="dropdown__toggle" href="/signin">Profile</a>
+            <a class="dropdown__toggle" href="/signin">Account</a>
             <div class="dropdown__menu">
                 <a href="/signin">Sign In</a>
                 <a href="/signup">Sign Up</a>
@@ -21,22 +20,35 @@
     </nav>
 </header>
 
-<main class="form-card">
-    <h1>Welcome back</h1>
-    <p class="form-subtitle">Sign in with your MealMajor account.</p>
-    <form id="signinForm" novalidate>
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" required>
+<main class="page-shell auth-layout">
+    <section class="auth-panel">
+        <p class="eyebrow">Welcome back</p>
+        <h1>Sign in and continue your weekly meal plan.</h1>
+        <p>Access your profile to manage dietary preferences and keep your planning workflow consistent.</p>
+        <ul class="auth-points">
+            <li>Keep your preferences synchronized across sessions.</li>
+            <li>Update your profile in one central dashboard.</li>
+            <li>Start planning in seconds.</li>
+        </ul>
+    </section>
 
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" required>
+    <section class="form-card">
+        <h1>Sign In</h1>
+        <p class="form-subtitle">Use your MealMajor account credentials.</p>
+        <form id="signinForm" novalidate>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
 
-        <button type="submit">Sign In</button>
-        <p id="formMessage" class="form-message" aria-live="polite"></p>
-    </form>
-    <p class="form-footer">
-        New here? <a href="/signup">Create an account</a>
-    </p>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required>
+
+            <button type="submit">Sign In</button>
+            <p id="formMessage" class="form-message" aria-live="polite"></p>
+        </form>
+        <p class="form-footer">
+            New here? <a href="/signup">Create an account</a>
+        </p>
+    </section>
 </main>
 
 <script src="/sign-in.js"></script>

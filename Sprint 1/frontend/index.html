@@ -11,7 +11,7 @@
     <a class="brand" href="/">MealMajor</a>
     <nav class="nav" id="authMenu">
         <div class="dropdown">
-            <a class="dropdown__toggle" href="/signin">Profile</a>
+            <a class="dropdown__toggle" href="/signin">Account</a>
             <div class="dropdown__menu">
                 <a href="/signin">Sign In</a>
                 <a href="/signup">Sign Up</a>
@@ -20,12 +20,51 @@
     </nav>
 </header>
 
-<main class="page-content">
-    <h1>MealMajor</h1>
-    <p>
-        Placeholder. MealMajor is a web app for students to plan meals,
-        track groceries, and propose easy recipes.
-    </p>
+<main class="page-shell home-page">
+    <section class="hero-card">
+        <p class="eyebrow">Student-friendly meal planning</p>
+        <h1>Plan meals, save money, and stay on track every week.</h1>
+        <p class="hero-copy">
+            MealMajor helps you build practical weekly meal plans, handle grocery lists, and
+            adapt to dietary needs without wasting time.
+        </p>
+        <div class="hero-actions" id="guestHeroActions">
+            <a class="btn btn-primary" href="/signup">Create Free Account</a>
+            <a class="btn btn-secondary" href="/signin">Sign In</a>
+        </div>
+        <div class="hero-actions" id="authHeroActions" hidden>
+            <a class="btn btn-primary" href="/recipes/browse">Browse Recipes</a>
+        </div>
+        <div class="hero-metrics">
+            <article>
+                <strong>7-day plans</strong>
+                <span>Structured around your class schedule.</span>
+            </article>
+            <article>
+                <strong>Custom preferences</strong>
+                <span>Dietary and allergy filters built in.</span>
+            </article>
+            <article>
+                <strong>Simple workflow</strong>
+                <span>Plan, shop, and cook with less friction.</span>
+            </article>
+        </div>
+    </section>
+
+    <section class="feature-grid">
+        <article class="feature-card">
+            <h2>Weekly Planning</h2>
+            <p>Build balanced plans you can actually follow, even on busy days.</p>
+        </article>
+        <article class="feature-card">
+            <h2>Preference Management</h2>
+            <p>Set dietary preferences and allergies once, then keep everything aligned.</p>
+        </article>
+        <article class="feature-card">
+            <h2>Faster Decisions</h2>
+            <p>Reduce daily decision fatigue with clear meal structure and organization.</p>
+        </article>
+    </section>
 </main>
 
 <script src="/site.js"></script>

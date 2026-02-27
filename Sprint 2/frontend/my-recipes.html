@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealMajor | My Recipes</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="/">MealMajor</a>
+    <nav class="nav" id="authMenu">
+        <div class="dropdown">
+            <a class="dropdown__toggle" href="/signin">Account</a>
+            <div class="dropdown__menu">
+                <a href="/signin">Sign In</a>
+                <a href="/signup">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="page-shell recipes-layout">
+    <section class="recipe-list-panel">
+        <div class="panel-header">
+            <h1>My Recipes</h1>
+        </div>
+        <p class="form-subtitle">Select a published recipe to preview it as a post.</p>
+        <a class="btn btn-primary recipe-panel-cta" href="/recipes/new">New Recipe</a>
+        <div id="recipeList" class="recipe-list"></div>
+    </section>
+
+    <section class="recipe-detail-panel">
+        <article id="recipeEmptyState" class="recipe-empty-state">
+            <h2>Recipe Preview</h2>
+            <p class="form-subtitle">Choose one of your published recipes to open its post view.</p>
+        </article>
+
+        <article id="recipeViewCard" class="recipe-post-card" hidden>
+            <header class="recipe-post-header">
+                <p class="eyebrow">Published Recipe</p>
+                <div class="recipe-title-row">
+                    <div>
+                        <h2 id="viewRecipeTitle"></h2>
+                        <p id="viewRecipeCuisineSubheading" class="recipe-cuisine-subheading"></p>
+                    </div>
+                    <div id="viewRecipeServings" class="servings-badge"></div>
+                </div>
+                <p id="viewRecipePublished" class="form-subtitle"></p>
+            </header>
+
+            <section class="recipe-metadata">
+                <div class="meta-pill"><span>Prep Time</span><strong id="viewRecipeTime"></strong></div>
+                <div class="meta-pill"><span>Cooking Time</span><strong id="viewRecipeCookingTime"></strong></div>
+                <div class="meta-pill"><span>Prep Steps</span><strong id="viewRecipeSteps"></strong></div>
+                <div class="meta-pill"><span>Difficulty</span><strong id="viewRecipeDifficulty"></strong></div>
+                <div class="meta-pill"><span>Cost</span><strong id="viewRecipeCost"></strong></div>
+            </section>
+
+            <section class="post-section">
+                <h3>Ingredients</h3>
+                <p id="viewRecipeIngredients" class="post-content"></p>
+            </section>
+
+            <section class="post-section">
+                <h3>Instructions</h3>
+                <p id="viewRecipeInstructions" class="post-content"></p>
+            </section>
+
+            <section class="post-section">
+                <h3>Dietary Preferences</h3>
+                <div id="viewRecipeDiets" class="tag-row"></div>
+            </section>
+
+            <section class="post-section">
+                <h3>Allergies</h3>
+                <div id="viewRecipeAllergies" class="tag-row"></div>
+            </section>
+
+            <div class="recipe-updated-row">
+                <p id="viewRecipeUpdated" class="recipe-updated-note"></p>
+            </div>
+            <div class="recipe-view-actions">
+                <button id="editRecipeButton" class="action-btn" type="button">Edit Recipe</button>
+                <button id="deleteRecipeButton" class="action-btn action-btn-danger" type="button">Delete Recipe</button>
+            </div>
+            <p id="viewRecipeMessage" class="form-message" aria-live="polite"></p>
+        </article>
+
+        <section id="recipeEditCard" class="recipe-editor-card" hidden>
+            <h2>Edit Recipe</h2>
+            <p id="selectedRecipeMeta" class="form-subtitle"></p>
+
+            <form id="recipeEditForm" novalidate>
+                <label for="editTitle">Recipe Title</label>
+                <input id="editTitle" name="editTitle" type="text" maxlength="180" required>
+
+                <label for="editIngredients">Ingredients (with measurements)</label>
+                <textarea id="editIngredients" name="editIngredients" class="text-area" rows="6" required></textarea>
+
+                <label for="editInstructions">Instructions</label>
+                <textarea id="editInstructions" name="editInstructions" class="text-area" rows="8" required></textarea>
+
+                <div class="form-section">
+                    <h2>Recipe Attributes</h2>
+
+                    <div class="form-grid">
+                        <div>
+                            <label for="editPreparationTimeValue">Preparation Time</label>
+                            <div class="duration-input-row">
+                                <input id="editPreparationTimeValue" name="editPreparationTimeValue" type="number" min="1" max="1440" required>
+                                <select id="editPreparationTimeUnit" name="editPreparationTimeUnit" class="duration-unit" required>
+                                    <option value="minutes" selected>Minutes</option>
+                                    <option value="hours">Hours</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="editCookingTimeValue">Cooking Time</label>
+                            <div class="duration-input-row">
+                                <input id="editCookingTimeValue" name="editCookingTimeValue" type="number" min="1" max="1440" required>
+                                <select id="editCookingTimeUnit" name="editCookingTimeUnit" class="duration-unit" required>
+                                    <option value="minutes" selected>Minutes</option>
+                                    <option value="hours">Hours</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="editPreparationSteps">Preparation Steps</label>
+                            <input id="editPreparationSteps" name="editPreparationSteps" type="number" min="1" max="100" required>
+                        </div>
+                        <div>
+                            <label for="editDifficulty">Difficulty (1-5)</label>
+                            <select id="editDifficulty" name="editDifficulty" required>
+                                <option value="1">1 - Very Easy</option>
+                                <option value="2">2 - Easy</option>
+                                <option value="3">3 - Medium</option>
+                                <option value="4">4 - Hard</option>
+                                <option value="5">5 - Very Hard</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="editCostLevel">Cost (1-5)</label>
+                            <select id="editCostLevel" name="editCostLevel" required>
+                                <option value="1">1 - $</option>
+                                <option value="2">2 - $$</option>
+                                <option value="3">3 - $$$</option>
+                                <option value="4">4 - $$$$</option>
+                                <option value="5">5 - $$$$$</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="editServings">Servings</label>
+                            <input id="editServings" name="editServings" type="number" min="1" max="100" required>
+                        </div>
+                        <div class="form-grid-full">
+                            <label for="editCuisine">Cuisine</label>
+                            <input id="editCuisine" name="editCuisine" type="text" maxlength="100" required>
+                        </div>
+                    </div>
+
+                    <label for="editDietaryOptions">Dietary Preferences</label>
+                    <div id="editDietaryOptions" class="checkbox-group dietary-group" role="group" aria-label="Recipe dietary preferences"></div>
+
+                    <label for="editAllergyOptions">Allergies</label>
+                    <div id="editAllergyOptions" class="checkbox-group allergy-group" role="group" aria-label="Recipe allergy tags"></div>
+                </div>
+
+                <div class="recipe-edit-actions">
+                    <button type="submit" class="action-btn">Save Recipe</button>
+                    <button id="cancelEditButton" type="button" class="action-btn action-btn-secondary">Cancel</button>
+                </div>
+                <p id="editFormMessage" class="form-message" aria-live="polite"></p>
+            </form>
+        </section>
+    </section>
+</main>
+
+<script src="/my-recipes.js"></script>
+<script src="/site.js"></script>
+</body>
+</html>
