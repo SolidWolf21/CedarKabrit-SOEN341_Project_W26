@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node \"Sprint 1/backend/server.js\"",
     "dev": "nodemon \"Sprint 1/backend/server.js\"",
-    "seed:defaults": "node \"Sprint 1/backend/db/seed-default-recipes.js\""
+    "seed:defaults": "node \"Sprint 2/backend/db/seed-default-recipes.js\""
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

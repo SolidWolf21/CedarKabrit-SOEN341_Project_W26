@@ -1,6 +1,6 @@
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
-const pool = require("./connection");
+const pool = require("../../../Sprint 1/backend/db/connection");
 const defaultRecipes = require("./default-recipes.json");
 
 const DEFAULT_USER = {

@@ -3,11 +3,13 @@ const express = require("express");
 
 const app = express();
 const port = process.env.PORT || 3000;
-const frontendDir = path.join(__dirname, "..", "frontend");
+const sprint1FrontendDir = path.join(__dirname, "..", "frontend");
+const sprint2FrontendDir = path.join(__dirname, "..", "..", "Sprint 2", "frontend");
 const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 app.use(express.json());
-app.use(express.static(frontendDir));
+app.use(express.static(sprint1FrontendDir));
+app.use(express.static(sprint2FrontendDir));
 
 function normalizeEmail(rawEmail) {
     return (rawEmail || "").toString().trim().toLowerCase();
@@ -85,31 +87,31 @@ function parseRecipePayload(body) {
 }
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(frontendDir, "index.html"));
+    res.sendFile(path.join(sprint1FrontendDir, "index.html"));
 });
 
 app.get("/signup", (req, res) => {
-    res.sendFile(path.join(frontendDir, "sign-up.html"));
+    res.sendFile(path.join(sprint1FrontendDir, "sign-up.html"));
 });
 
 app.get("/signin", (req, res) => {
-    res.sendFile(path.join(frontendDir, "sign-in.html"));
+    res.sendFile(path.join(sprint1FrontendDir, "sign-in.html"));
 });
 
 app.get("/profile", (req, res) => {
-    res.sendFile(path.join(frontendDir, "profile.html"));
+    res.sendFile(path.join(sprint1FrontendDir, "profile.html"));
 });
 
 app.get("/recipes/new", (req, res) => {
-    res.sendFile(path.join(frontendDir, "new-recipe.html"));
+    res.sendFile(path.join(sprint2FrontendDir, "new-recipe.html"));
 });
 
 app.get("/recipes/mine", (req, res) => {
-    res.sendFile(path.join(frontendDir, "my-recipes.html"));
+    res.sendFile(path.join(sprint2FrontendDir, "my-recipes.html"));
 });
 
 app.get("/recipes/browse", (req, res) => {
-    res.sendFile(path.join(frontendDir, "browse-recipes.html"));
+    res.sendFile(path.join(sprint2FrontendDir, "browse-recipes.html"));
 });
 
 app.get("/health", (req, res) => {
