@@ -63,3 +63,8 @@ DB_NAME=MealMajors
 4. **Test Connection** and **OK**.
 5. If tables don’t appear, open the **Schemas** tab, check `MealMajors`, then **Synchronize**.
 
+### Seed app default recipes
+To insert built-in recipes that appear in **Browse Recipes**:
+```bash
+npm run seed:defaults
+```
