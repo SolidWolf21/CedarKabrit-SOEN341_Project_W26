@@ -497,7 +497,13 @@ app.get("/api/recipes/browse", async (req, res) => {
                         FROM recipe_dietary_options rd
                         INNER JOIN dietary_options d ON d.id = rd.dietary_option_id
                         WHERE rd.recipe_id = r.id
-                    ) AS dietary_names
+                    ) AS dietary_names,
+                    (
+                        SELECT GROUP_CONCAT(a.name ORDER BY a.name SEPARATOR '||')
+                        FROM recipe_allergy_options ra
+                        INNER JOIN allergy_options a ON a.id = ra.allergy_option_id
+                        WHERE ra.recipe_id = r.id
+                    ) AS allergy_names
              FROM recipes r
              INNER JOIN users u ON u.id = r.user_id
              ORDER BY r.updated_at DESC`
@@ -517,7 +523,8 @@ app.get("/api/recipes/browse", async (req, res) => {
                 updatedAt: row.updated_at,
                 authorName: `${row.first_name || ""} ${row.last_name || ""}`.trim(),
                 authorEmail: row.email,
-                dietaryOptions: row.dietary_names ? row.dietary_names.split("||") : []
+                dietaryOptions: row.dietary_names ? row.dietary_names.split("||") : [],
+                allergyOptions: row.allergy_names ? row.allergy_names.split("||") : []
             }))
         });
     } catch (error) {

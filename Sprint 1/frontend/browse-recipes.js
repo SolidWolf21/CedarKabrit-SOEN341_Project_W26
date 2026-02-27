@@ -3,7 +3,20 @@ const browseRecipeList = document.getElementById("browseRecipeList");
 const browseStatus = document.getElementById("browseStatus");
 const staticSignOutLink = document.getElementById("staticSignOutLink");
 
+const browseFilterForm = document.getElementById("browseFilterForm");
+const browseSearchInput = document.getElementById("browseSearchInput");
+const filterPrepMaxInput = document.getElementById("filterPrepMax");
+const filterCookMaxInput = document.getElementById("filterCookMax");
+const filterServingsMinInput = document.getElementById("filterServingsMin");
+const filterDifficultySelect = document.getElementById("filterDifficulty");
+const filterCostSelect = document.getElementById("filterCost");
+const browseDietaryFilters = document.getElementById("browseDietaryFilters");
+const browseAllergyFilters = document.getElementById("browseAllergyFilters");
+const clearBrowseFiltersButton = document.getElementById("clearBrowseFilters");
+
 const detailCache = new Map();
+let allBrowseRecipes = [];
+let hasLoadedRecipes = false;
 
 if (!userEmail) {
     window.location.replace("/signin");
@@ -66,6 +79,36 @@ function formatCost(level) {
     return "$".repeat(normalized);
 }
 
+function normalizeFilterText(value) {
+    return (value || "").toString().trim().toLowerCase();
+}
+
+function parseOptionalNumber(value) {
+    const trimmed = (value || "").toString().trim();
+    if (!trimmed) {
+        return null;
+    }
+    const parsed = Number(trimmed);
+    if (!Number.isFinite(parsed) || parsed < 0) {
+        return null;
+    }
+    return parsed;
+}
+
+function collectCheckedValues(container) {
+    if (!container) {
+        return [];
+    }
+    return Array.from(container.querySelectorAll("input[type='checkbox']:checked")).map((input) =>
+        normalizeFilterText(input.value)
+    );
+}
+
+function includesAllValues(sourceValues, requiredValues) {
+    const sourceSet = new Set((sourceValues || []).map((value) => normalizeFilterText(value)));
+    return requiredValues.every((value) => sourceSet.has(value));
+}
+
 function buildDietaryPreviewPills(options) {
     const row = document.createElement("div");
     row.className = "browse-dietary-meta";
@@ -105,6 +148,158 @@ function renderTagRow(container, values, emptyText, tagVariantClass = "") {
         tag.textContent = value;
         container.appendChild(tag);
     });
+}
+
+function setFilterGroupUnavailable(container, text) {
+    if (!container) {
+        return;
+    }
+    container.innerHTML = "";
+    const note = document.createElement("p");
+    note.className = "browse-filter-empty";
+    note.textContent = text;
+    container.appendChild(note);
+}
+
+function renderFilterOptions(container, options, inputName, idPrefix) {
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = "";
+    if (!Array.isArray(options) || options.length === 0) {
+        setFilterGroupUnavailable(container, "No options available.");
+        return;
+    }
+
+    options.forEach((option, index) => {
+        const label = document.createElement("label");
+        label.className = "checkbox-item";
+
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.name = inputName;
+        input.value = option.name;
+        input.id = `${idPrefix}-${index}`;
+
+        const text = document.createElement("span");
+        text.textContent = option.name;
+
+        label.htmlFor = input.id;
+        label.appendChild(input);
+        label.appendChild(text);
+        container.appendChild(label);
+    });
+}
+
+async function loadFilterOptions() {
+    if (!browseDietaryFilters || !browseAllergyFilters) {
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/preferences");
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Unable to load filter options.");
+        }
+
+        renderFilterOptions(
+            browseDietaryFilters,
+            data.dietaryOptions || [],
+            "browseDietaryFilter",
+            "browse-dietary"
+        );
+        renderFilterOptions(
+            browseAllergyFilters,
+            data.allergyOptions || [],
+            "browseAllergyFilter",
+            "browse-allergy"
+        );
+    } catch (error) {
+        setFilterGroupUnavailable(browseDietaryFilters, "Unable to load dietary options.");
+        setFilterGroupUnavailable(browseAllergyFilters, "Unable to load allergy options.");
+    }
+}
+
+function getActiveFilters() {
+    return {
+        searchText: normalizeFilterText(browseSearchInput && browseSearchInput.value),
+        prepTimeMax: parseOptionalNumber(filterPrepMaxInput && filterPrepMaxInput.value),
+        cookTimeMax: parseOptionalNumber(filterCookMaxInput && filterCookMaxInput.value),
+        servingsMin: parseOptionalNumber(filterServingsMinInput && filterServingsMinInput.value),
+        difficulty: parseOptionalNumber(filterDifficultySelect && filterDifficultySelect.value),
+        costLevel: parseOptionalNumber(filterCostSelect && filterCostSelect.value),
+        dietaryValues: collectCheckedValues(browseDietaryFilters),
+        allergyValues: collectCheckedValues(browseAllergyFilters)
+    };
+}
+
+function hasAnyFilters(filters) {
+    return Boolean(
+        filters.searchText ||
+            filters.prepTimeMax !== null ||
+            filters.cookTimeMax !== null ||
+            filters.servingsMin !== null ||
+            filters.difficulty !== null ||
+            filters.costLevel !== null ||
+            filters.dietaryValues.length > 0 ||
+            filters.allergyValues.length > 0
+    );
+}
+
+function recipeMatchesFilters(recipe, filters) {
+    if (filters.searchText) {
+        const searchCorpus = normalizeFilterText(
+            `${recipe.title || ""} ${recipe.cuisine || ""} ${recipe.authorName || ""} ${recipe.authorEmail || ""}`
+        );
+        if (!searchCorpus.includes(filters.searchText)) {
+            return false;
+        }
+    }
+
+    if (
+        filters.prepTimeMax !== null &&
+        Number(recipe.preparationTimeMinutes || 0) > filters.prepTimeMax
+    ) {
+        return false;
+    }
+
+    if (
+        filters.cookTimeMax !== null &&
+        Number(recipe.cookingTimeMinutes || 0) > filters.cookTimeMax
+    ) {
+        return false;
+    }
+
+    if (filters.servingsMin !== null && Number(recipe.servings || 0) < filters.servingsMin) {
+        return false;
+    }
+
+    if (filters.difficulty !== null && Number(recipe.difficulty || 0) !== filters.difficulty) {
+        return false;
+    }
+
+    if (filters.costLevel !== null && Number(recipe.costLevel || 0) !== filters.costLevel) {
+        return false;
+    }
+
+    if (
+        filters.dietaryValues.length > 0 &&
+        !includesAllValues(recipe.dietaryOptions || [], filters.dietaryValues)
+    ) {
+        return false;
+    }
+
+    if (
+        filters.allergyValues.length > 0 &&
+        !includesAllValues(recipe.allergyOptions || [], filters.allergyValues)
+    ) {
+        return false;
+    }
+
+    return true;
 }
 
 function collapseCard(card) {
@@ -360,34 +555,107 @@ function createBrowseCard(recipe) {
     return card;
 }
 
-async function loadBrowseRecipes() {
-    try {
-        const response = await fetch(`/api/recipes/browse?email=${encodeURIComponent(userEmail)}`);
-        const data = await response.json();
+function renderBrowseRecipeList(recipes, hasActiveFilters) {
+    browseRecipeList.innerHTML = "";
 
-        if (!response.ok) {
-            browseStatus.textContent = data.error || "Unable to load recipes.";
-            browseStatus.classList.add("is-error");
-            return;
-        }
+    if (!Array.isArray(recipes) || recipes.length === 0) {
+        const emptyText = hasActiveFilters
+            ? "No recipes match your current filters."
+            : "No recipes are available in the database right now.";
+        browseRecipeList.innerHTML = `<p class="empty-state">${emptyText}</p>`;
+        return;
+    }
 
-        const recipes = data.recipes || [];
-        if (recipes.length === 0) {
-            browseStatus.textContent = "No published recipes yet.";
-            browseRecipeList.innerHTML = '<p class="empty-state">No recipes are available in the database right now.</p>';
-            return;
-        }
+    recipes.forEach((recipe) => {
+        browseRecipeList.appendChild(createBrowseCard(recipe));
+    });
+}
 
-        browseStatus.classList.remove("is-error");
-        browseStatus.textContent = `${recipes.length} recipe${recipes.length === 1 ? "" : "s"} available`;
-        browseRecipeList.innerHTML = "";
-        recipes.forEach((recipe) => {
-            browseRecipeList.appendChild(createBrowseCard(recipe));
+function updateBrowseStatus(filteredCount, totalCount, hasActiveFilters) {
+    browseStatus.classList.remove("is-error");
+
+    if (totalCount === 0) {
+        browseStatus.textContent = "No published recipes yet.";
+        return;
+    }
+
+    if (filteredCount === 0 && hasActiveFilters) {
+        browseStatus.textContent = "No recipes match your current filters.";
+        return;
+    }
+
+    if (!hasActiveFilters) {
+        browseStatus.textContent = `${totalCount} recipe${totalCount === 1 ? "" : "s"} available`;
+        return;
+    }
+
+    browseStatus.textContent =
+        `${filteredCount} of ${totalCount} recipe${totalCount === 1 ? "" : "s"} match filters`;
+}
+
+function applyFiltersAndRender() {
+    if (!hasLoadedRecipes) {
+        return;
+    }
+
+    const filters = getActiveFilters();
+    const hasActiveFilters = hasAnyFilters(filters);
+    const filteredRecipes = allBrowseRecipes.filter((recipe) => recipeMatchesFilters(recipe, filters));
+
+    renderBrowseRecipeList(filteredRecipes, hasActiveFilters);
+    updateBrowseStatus(filteredRecipes.length, allBrowseRecipes.length, hasActiveFilters);
+}
+
+function bindFilterEvents() {
+    if (!browseFilterForm) {
+        return;
+    }
+
+    browseFilterForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+    });
+
+    browseFilterForm.addEventListener("input", () => {
+        applyFiltersAndRender();
+    });
+
+    browseFilterForm.addEventListener("change", () => {
+        applyFiltersAndRender();
+    });
+
+    if (clearBrowseFiltersButton) {
+        clearBrowseFiltersButton.addEventListener("click", () => {
+            browseFilterForm.reset();
+            Array.from(browseFilterForm.querySelectorAll("input[type='checkbox']")).forEach((checkbox) => {
+                checkbox.checked = false;
+            });
+            applyFiltersAndRender();
         });
-    } catch (error) {
-        browseStatus.textContent = "Network error. Please try again.";
-        browseStatus.classList.add("is-error");
     }
 }
 
-loadBrowseRecipes();
+async function loadBrowseRecipes() {
+    const response = await fetch(`/api/recipes/browse?email=${encodeURIComponent(userEmail)}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error || "Unable to load recipes.");
+    }
+
+    allBrowseRecipes = data.recipes || [];
+    hasLoadedRecipes = true;
+}
+
+async function initBrowse() {
+    bindFilterEvents();
+    await loadFilterOptions();
+    await loadBrowseRecipes();
+    applyFiltersAndRender();
+}
+
+initBrowse().catch((error) => {
+    hasLoadedRecipes = false;
+    browseStatus.textContent = error.message || "Network error. Please try again.";
+    browseStatus.classList.add("is-error");
+    browseRecipeList.innerHTML = '<p class="empty-state">Unable to load recipes right now.</p>';
+});

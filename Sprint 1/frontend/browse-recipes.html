@@ -27,6 +27,71 @@
             <h1>Browse Recipes</h1>
             <p id="browseStatus" class="form-subtitle">Loading recipes...</p>
         </header>
+        <section class="browse-filters" aria-label="Recipe search and filters">
+            <form id="browseFilterForm" novalidate>
+                <div class="browse-search-row">
+                    <label for="browseSearchInput">Search Recipes</label>
+                    <input
+                        id="browseSearchInput"
+                        name="browseSearchInput"
+                        type="search"
+                        placeholder="Search by title, cuisine, or publisher"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="browse-filter-grid">
+                    <div class="browse-filter-field">
+                        <label for="filterPrepMax">Preparation Time (max min)</label>
+                        <input id="filterPrepMax" name="filterPrepMax" type="number" min="0" step="1" placeholder="Any">
+                    </div>
+                    <div class="browse-filter-field">
+                        <label for="filterCookMax">Cooking Time (max min)</label>
+                        <input id="filterCookMax" name="filterCookMax" type="number" min="0" step="1" placeholder="Any">
+                    </div>
+                    <div class="browse-filter-field">
+                        <label for="filterServingsMin">Servings (min)</label>
+                        <input id="filterServingsMin" name="filterServingsMin" type="number" min="1" step="1" placeholder="Any">
+                    </div>
+                    <div class="browse-filter-field">
+                        <label for="filterDifficulty">Difficulty</label>
+                        <select id="filterDifficulty" name="filterDifficulty">
+                            <option value="">Any</option>
+                            <option value="1">1 - Very Easy</option>
+                            <option value="2">2 - Easy</option>
+                            <option value="3">3 - Medium</option>
+                            <option value="4">4 - Hard</option>
+                            <option value="5">5 - Very Hard</option>
+                        </select>
+                    </div>
+                    <div class="browse-filter-field">
+                        <label for="filterCost">Cost</label>
+                        <select id="filterCost" name="filterCost">
+                            <option value="">Any</option>
+                            <option value="1">1 - $</option>
+                            <option value="2">2 - $$</option>
+                            <option value="3">3 - $$$</option>
+                            <option value="4">4 - $$$$</option>
+                            <option value="5">5 - $$$$$</option>
+                        </select>
+                    </div>
+                    <div class="browse-filter-actions">
+                        <button id="clearBrowseFilters" class="action-btn action-btn-secondary" type="button">Clear Filters</button>
+                    </div>
+                </div>
+
+                <div class="browse-filter-groups">
+                    <div class="browse-filter-group">
+                        <p class="browse-filter-group-title">Dietary Restrictions</p>
+                        <div id="browseDietaryFilters" class="checkbox-group dietary-group" role="group" aria-label="Dietary restrictions"></div>
+                    </div>
+                    <div class="browse-filter-group">
+                        <p class="browse-filter-group-title">Allergies</p>
+                        <div id="browseAllergyFilters" class="checkbox-group allergy-group" role="group" aria-label="Allergies"></div>
+                    </div>
+                </div>
+            </form>
+        </section>
         <div id="browseRecipeList" class="browse-list"></div>
     </section>
 </main>
