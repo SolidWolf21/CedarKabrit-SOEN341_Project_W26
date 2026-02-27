@@ -38,9 +38,11 @@ function parseRecipePayload(body) {
     const instructions = (payload.instructions || "").toString().trim();
     const cuisine = (payload.cuisine || "").toString().trim();
     const preparationTimeMinutes = toInt(payload.preparationTimeMinutes);
+    const cookingTimeMinutes = toInt(payload.cookingTimeMinutes);
     const preparationSteps = toInt(payload.preparationSteps);
     const difficulty = toInt(payload.difficulty);
     const costLevel = toInt(payload.costLevel);
+    const servings = toInt(payload.servings);
     const dietaryOptionIds = toIdArray(payload.dietaryOptionIds);
     const allergyOptionIds = toIdArray(payload.allergyOptionIds);
 
@@ -49,6 +51,9 @@ function parseRecipePayload(body) {
     }
     if (!preparationTimeMinutes || preparationTimeMinutes < 1 || preparationTimeMinutes > 1440) {
         return { error: "Preparation time must be between 1 and 1440 minutes." };
+    }
+    if (!cookingTimeMinutes || cookingTimeMinutes < 1 || cookingTimeMinutes > 1440) {
+        return { error: "Cooking time must be between 1 and 1440 minutes." };
     }
     if (!preparationSteps || preparationSteps < 1 || preparationSteps > 100) {
         return { error: "Preparation steps must be between 1 and 100." };
@@ -59,6 +64,9 @@ function parseRecipePayload(body) {
     if (!costLevel || costLevel < 1 || costLevel > 5) {
         return { error: "Cost must be a value between 1 and 5." };
     }
+    if (!servings || servings < 1 || servings > 100) {
+        return { error: "Servings must be a value between 1 and 100." };
+    }
 
     return {
         title,
@@ -66,9 +74,11 @@ function parseRecipePayload(body) {
         instructions,
         cuisine,
         preparationTimeMinutes,
+        cookingTimeMinutes,
         preparationSteps,
         difficulty,
         costLevel,
+        servings,
         dietaryOptionIds,
         allergyOptionIds
     };
@@ -355,17 +365,19 @@ app.post("/api/recipes", async (req, res) => {
 
         const [insertResult] = await connection.execute(
             `INSERT INTO recipes
-                (user_id, title, ingredients, instructions, preparation_time_minutes, preparation_steps, difficulty_rating, cost_level, cuisine)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                (user_id, title, ingredients, instructions, preparation_time_minutes, cooking_time_minutes, preparation_steps, difficulty_rating, cost_level, servings, cuisine)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 userId,
                 parsed.title,
                 parsed.ingredients,
                 parsed.instructions,
                 parsed.preparationTimeMinutes,
+                parsed.cookingTimeMinutes,
                 parsed.preparationSteps,
                 parsed.difficulty,
                 parsed.costLevel,
+                parsed.servings,
                 parsed.cuisine
             ]
         );
@@ -416,9 +428,11 @@ app.get("/api/recipes", async (req, res) => {
                     r.title,
                     r.cuisine,
                     r.preparation_time_minutes,
+                    r.cooking_time_minutes,
                     r.preparation_steps,
                     r.difficulty_rating,
                     r.cost_level,
+                    r.servings,
                     r.updated_at
              FROM recipes r
              INNER JOIN users u ON u.id = r.user_id
@@ -433,9 +447,11 @@ app.get("/api/recipes", async (req, res) => {
                 title: row.title,
                 cuisine: row.cuisine,
                 preparationTimeMinutes: row.preparation_time_minutes,
+                cookingTimeMinutes: row.cooking_time_minutes,
                 preparationSteps: row.preparation_steps,
                 difficulty: row.difficulty_rating,
                 costLevel: row.cost_level,
+                servings: row.servings,
                 updatedAt: row.updated_at
             }))
         });
@@ -463,9 +479,11 @@ app.get("/api/recipes/:id", async (req, res) => {
                     r.ingredients,
                     r.instructions,
                     r.preparation_time_minutes,
+                    r.cooking_time_minutes,
                     r.preparation_steps,
                     r.difficulty_rating,
                     r.cost_level,
+                    r.servings,
                     r.cuisine,
                     r.created_at,
                     r.updated_at
@@ -496,9 +514,11 @@ app.get("/api/recipes/:id", async (req, res) => {
             ingredients: row.ingredients,
             instructions: row.instructions,
             preparationTimeMinutes: row.preparation_time_minutes,
+            cookingTimeMinutes: row.cooking_time_minutes,
             preparationSteps: row.preparation_steps,
             difficulty: row.difficulty_rating,
             costLevel: row.cost_level,
+            servings: row.servings,
             cuisine: row.cuisine,
             dietaryOptionIds: dietaryRows.map((item) => item.id),
             allergyOptionIds: allergyRows.map((item) => item.id),
@@ -552,9 +572,11 @@ app.put("/api/recipes/:id", async (req, res) => {
                  ingredients = ?,
                  instructions = ?,
                  preparation_time_minutes = ?,
+                 cooking_time_minutes = ?,
                  preparation_steps = ?,
                  difficulty_rating = ?,
                  cost_level = ?,
+                 servings = ?,
                  cuisine = ?
              WHERE id = ?`,
             [
@@ -562,9 +584,11 @@ app.put("/api/recipes/:id", async (req, res) => {
                 parsed.ingredients,
                 parsed.instructions,
                 parsed.preparationTimeMinutes,
+                parsed.cookingTimeMinutes,
                 parsed.preparationSteps,
                 parsed.difficulty,
                 parsed.costLevel,
+                parsed.servings,
                 parsed.cuisine,
                 recipeId
             ]
@@ -601,6 +625,39 @@ app.put("/api/recipes/:id", async (req, res) => {
         if (connection) {
             connection.release();
         }
+    }
+});
+
+app.delete("/api/recipes/:id", async (req, res) => {
+    const email = normalizeEmail(req.query.email);
+    const recipeId = toInt(req.params.id);
+    if (!email || !emailPattern.test(email)) {
+        return res.status(400).json({ error: "Valid email is required." });
+    }
+    if (!recipeId || recipeId < 1) {
+        return res.status(400).json({ error: "Valid recipe id is required." });
+    }
+
+    try {
+        const pool = require("./db/connection");
+        const [ownedRows] = await pool.execute(
+            `SELECT r.id
+             FROM recipes r
+             INNER JOIN users u ON u.id = r.user_id
+             WHERE r.id = ? AND u.email = ?
+             LIMIT 1`,
+            [recipeId, email]
+        );
+
+        if (!ownedRows || ownedRows.length === 0) {
+            return res.status(404).json({ error: "Recipe not found." });
+        }
+
+        await pool.execute("DELETE FROM recipes WHERE id = ?", [recipeId]);
+        return res.json({ message: "Recipe deleted." });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Server error." });
     }
 });
 

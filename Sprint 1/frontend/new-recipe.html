@@ -41,8 +41,24 @@
 
                 <div class="form-grid">
                     <div>
-                        <label for="preparationTimeMinutes">Preparation Time (minutes)</label>
-                        <input id="preparationTimeMinutes" name="preparationTimeMinutes" type="number" min="1" max="1440" required>
+                        <label for="preparationTimeValue">Preparation Time</label>
+                        <div class="duration-input-row">
+                            <input id="preparationTimeValue" name="preparationTimeValue" type="number" min="1" max="1440" required>
+                            <select id="preparationTimeUnit" name="preparationTimeUnit" class="duration-unit" required>
+                                <option value="minutes" selected>Minutes</option>
+                                <option value="hours">Hours</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="cookingTimeValue">Cooking Time</label>
+                        <div class="duration-input-row">
+                            <input id="cookingTimeValue" name="cookingTimeValue" type="number" min="1" max="1440" required>
+                            <select id="cookingTimeUnit" name="cookingTimeUnit" class="duration-unit" required>
+                                <option value="minutes" selected>Minutes</option>
+                                <option value="hours">Hours</option>
+                            </select>
+                        </div>
                     </div>
                     <div>
                         <label for="preparationSteps">Preparation Steps</label>
@@ -61,14 +77,18 @@
                     <div>
                         <label for="costLevel">Cost (1-5)</label>
                         <select id="costLevel" name="costLevel" required>
-                            <option value="1">1 - Very Low</option>
-                            <option value="2">2 - Low</option>
-                            <option value="3" selected>3 - Medium</option>
-                            <option value="4">4 - High</option>
-                            <option value="5">5 - Very High</option>
+                            <option value="1">1 - $</option>
+                            <option value="2">2 - $$</option>
+                            <option value="3" selected>3 - $$$</option>
+                            <option value="4">4 - $$$$</option>
+                            <option value="5">5 - $$$$$</option>
                         </select>
                     </div>
                     <div>
+                        <label for="servings">Servings</label>
+                        <input id="servings" name="servings" type="number" min="1" max="100" required>
+                    </div>
+                    <div class="form-grid-full">
                         <label for="cuisine">Cuisine</label>
                         <input id="cuisine" name="cuisine" type="text" maxlength="100" required>
                     </div>

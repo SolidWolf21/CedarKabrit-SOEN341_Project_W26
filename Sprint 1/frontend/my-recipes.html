@@ -40,13 +40,19 @@
         <article id="recipeViewCard" class="recipe-post-card" hidden>
             <header class="recipe-post-header">
                 <p class="eyebrow">Published Recipe</p>
-                <h2 id="viewRecipeTitle"></h2>
+                <div class="recipe-title-row">
+                    <div>
+                        <h2 id="viewRecipeTitle"></h2>
+                        <p id="viewRecipeCuisineSubheading" class="recipe-cuisine-subheading"></p>
+                    </div>
+                    <div id="viewRecipeServings" class="servings-badge"></div>
+                </div>
                 <p id="viewRecipeUpdated" class="form-subtitle"></p>
             </header>
 
             <section class="recipe-metadata">
-                <div class="meta-pill"><span>Cuisine</span><strong id="viewRecipeCuisine"></strong></div>
                 <div class="meta-pill"><span>Prep Time</span><strong id="viewRecipeTime"></strong></div>
+                <div class="meta-pill"><span>Cooking Time</span><strong id="viewRecipeCookingTime"></strong></div>
                 <div class="meta-pill"><span>Prep Steps</span><strong id="viewRecipeSteps"></strong></div>
                 <div class="meta-pill"><span>Difficulty</span><strong id="viewRecipeDifficulty"></strong></div>
                 <div class="meta-pill"><span>Cost</span><strong id="viewRecipeCost"></strong></div>
@@ -74,6 +80,7 @@
 
             <div class="recipe-view-actions">
                 <button id="editRecipeButton" class="action-btn" type="button">Edit Recipe</button>
+                <button id="deleteRecipeButton" class="action-btn action-btn-danger" type="button">Delete Recipe</button>
             </div>
             <p id="viewRecipeMessage" class="form-message" aria-live="polite"></p>
         </article>
@@ -97,8 +104,24 @@
 
                     <div class="form-grid">
                         <div>
-                            <label for="editPreparationTimeMinutes">Preparation Time (minutes)</label>
-                            <input id="editPreparationTimeMinutes" name="editPreparationTimeMinutes" type="number" min="1" max="1440" required>
+                            <label for="editPreparationTimeValue">Preparation Time</label>
+                            <div class="duration-input-row">
+                                <input id="editPreparationTimeValue" name="editPreparationTimeValue" type="number" min="1" max="1440" required>
+                                <select id="editPreparationTimeUnit" name="editPreparationTimeUnit" class="duration-unit" required>
+                                    <option value="minutes" selected>Minutes</option>
+                                    <option value="hours">Hours</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="editCookingTimeValue">Cooking Time</label>
+                            <div class="duration-input-row">
+                                <input id="editCookingTimeValue" name="editCookingTimeValue" type="number" min="1" max="1440" required>
+                                <select id="editCookingTimeUnit" name="editCookingTimeUnit" class="duration-unit" required>
+                                    <option value="minutes" selected>Minutes</option>
+                                    <option value="hours">Hours</option>
+                                </select>
+                            </div>
                         </div>
                         <div>
                             <label for="editPreparationSteps">Preparation Steps</label>
@@ -117,14 +140,18 @@
                         <div>
                             <label for="editCostLevel">Cost (1-5)</label>
                             <select id="editCostLevel" name="editCostLevel" required>
-                                <option value="1">1 - Very Low</option>
-                                <option value="2">2 - Low</option>
-                                <option value="3">3 - Medium</option>
-                                <option value="4">4 - High</option>
-                                <option value="5">5 - Very High</option>
+                                <option value="1">1 - $</option>
+                                <option value="2">2 - $$</option>
+                                <option value="3">3 - $$$</option>
+                                <option value="4">4 - $$$$</option>
+                                <option value="5">5 - $$$$$</option>
                             </select>
                         </div>
                         <div>
+                            <label for="editServings">Servings</label>
+                            <input id="editServings" name="editServings" type="number" min="1" max="100" required>
+                        </div>
+                        <div class="form-grid-full">
                             <label for="editCuisine">Cuisine</label>
                             <input id="editCuisine" name="editCuisine" type="text" maxlength="100" required>
                         </div>

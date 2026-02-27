@@ -7,9 +7,11 @@ const recipeViewCard = document.getElementById("recipeViewCard");
 const recipeEditCard = document.getElementById("recipeEditCard");
 
 const viewRecipeTitle = document.getElementById("viewRecipeTitle");
+const viewRecipeCuisineSubheading = document.getElementById("viewRecipeCuisineSubheading");
+const viewRecipeServings = document.getElementById("viewRecipeServings");
 const viewRecipeUpdated = document.getElementById("viewRecipeUpdated");
-const viewRecipeCuisine = document.getElementById("viewRecipeCuisine");
 const viewRecipeTime = document.getElementById("viewRecipeTime");
+const viewRecipeCookingTime = document.getElementById("viewRecipeCookingTime");
 const viewRecipeSteps = document.getElementById("viewRecipeSteps");
 const viewRecipeDifficulty = document.getElementById("viewRecipeDifficulty");
 const viewRecipeCost = document.getElementById("viewRecipeCost");
@@ -20,6 +22,7 @@ const viewRecipeAllergies = document.getElementById("viewRecipeAllergies");
 const viewRecipeMessage = document.getElementById("viewRecipeMessage");
 
 const editRecipeButton = document.getElementById("editRecipeButton");
+const deleteRecipeButton = document.getElementById("deleteRecipeButton");
 const cancelEditButton = document.getElementById("cancelEditButton");
 const recipeEditForm = document.getElementById("recipeEditForm");
 const editMessage = document.getElementById("editFormMessage");
@@ -79,6 +82,93 @@ function formatDate(rawDate) {
     });
 }
 
+function formatDifficulty(level) {
+    const labels = {
+        1: "Very Easy",
+        2: "Easy",
+        3: "Medium",
+        4: "Hard",
+        5: "Very Hard"
+    };
+    return labels[level] || "Unknown";
+}
+
+function formatCost(level) {
+    const normalized = Number(level);
+    if (!Number.isInteger(normalized) || normalized < 1 || normalized > 5) {
+        return "Unknown";
+    }
+    return "$".repeat(normalized);
+}
+
+function formatDuration(totalMinutes) {
+    const minutes = Number(totalMinutes);
+    if (!Number.isFinite(minutes) || minutes <= 0) {
+        return "0 min";
+    }
+
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (hours > 0 && remainingMinutes > 0) {
+        return `${hours}h ${remainingMinutes} min`;
+    }
+    if (hours > 0) {
+        return `${hours}h`;
+    }
+    return `${remainingMinutes} min`;
+}
+
+function toMinutes(value, unit) {
+    const amount = Number(value);
+    if (!Number.isFinite(amount) || amount <= 0) {
+        return 0;
+    }
+    if (unit === "hours") {
+        return Math.round(amount * 60);
+    }
+    return Math.round(amount);
+}
+
+function applyDurationInputMode(valueInput, unitSelect) {
+    const isHours = unitSelect.value === "hours";
+    valueInput.step = isHours ? "0.25" : "1";
+    valueInput.max = isHours ? "24" : "1440";
+}
+
+function bindDurationInputMode(valueInputId, unitSelectId) {
+    const valueInput = document.getElementById(valueInputId);
+    const unitSelect = document.getElementById(unitSelectId);
+    if (!valueInput || !unitSelect) {
+        return;
+    }
+
+    applyDurationInputMode(valueInput, unitSelect);
+    unitSelect.addEventListener("change", () => {
+        applyDurationInputMode(valueInput, unitSelect);
+    });
+}
+
+function setDurationFields(totalMinutes, valueInputId, unitSelectId) {
+    const minutes = Number(totalMinutes) || 0;
+    const valueInput = document.getElementById(valueInputId);
+    const unitSelect = document.getElementById(unitSelectId);
+
+    if (!valueInput || !unitSelect) {
+        return;
+    }
+
+    if (minutes >= 60 && minutes % 60 === 0) {
+        valueInput.value = String(minutes / 60);
+        unitSelect.value = "hours";
+    } else {
+        valueInput.value = String(minutes);
+        unitSelect.value = "minutes";
+    }
+
+    applyDurationInputMode(valueInput, unitSelect);
+}
+
 function updateRecipeSelectionUI() {
     const buttons = Array.from(recipeList.querySelectorAll(".recipe-item"));
     buttons.forEach((button) => {
@@ -134,12 +224,14 @@ function mapIdsToNames(ids, optionMap) {
 
 function populateRecipeView(recipe) {
     viewRecipeTitle.textContent = recipe.title || "Untitled Recipe";
+    viewRecipeCuisineSubheading.textContent = recipe.cuisine || "Cuisine not set";
+    viewRecipeServings.textContent = `Serves ${recipe.servings || 1}`;
     viewRecipeUpdated.textContent = `Updated ${formatDate(recipe.updatedAt)}`;
-    viewRecipeCuisine.textContent = recipe.cuisine || "Not set";
-    viewRecipeTime.textContent = `${recipe.preparationTimeMinutes || 0} min`;
+    viewRecipeTime.textContent = formatDuration(recipe.preparationTimeMinutes);
+    viewRecipeCookingTime.textContent = formatDuration(recipe.cookingTimeMinutes);
     viewRecipeSteps.textContent = `${recipe.preparationSteps || 0} steps`;
-    viewRecipeDifficulty.textContent = `${recipe.difficulty || 0}/5`;
-    viewRecipeCost.textContent = `${recipe.costLevel || 0}/5`;
+    viewRecipeDifficulty.textContent = formatDifficulty(recipe.difficulty);
+    viewRecipeCost.textContent = formatCost(recipe.costLevel);
     viewRecipeIngredients.textContent = recipe.ingredients || "";
     viewRecipeInstructions.textContent = recipe.instructions || "";
 
@@ -154,10 +246,12 @@ function populateRecipeEdit(recipe) {
     document.getElementById("editTitle").value = recipe.title || "";
     document.getElementById("editIngredients").value = recipe.ingredients || "";
     document.getElementById("editInstructions").value = recipe.instructions || "";
-    document.getElementById("editPreparationTimeMinutes").value = recipe.preparationTimeMinutes || "";
+    setDurationFields(recipe.preparationTimeMinutes, "editPreparationTimeValue", "editPreparationTimeUnit");
+    setDurationFields(recipe.cookingTimeMinutes, "editCookingTimeValue", "editCookingTimeUnit");
     document.getElementById("editPreparationSteps").value = recipe.preparationSteps || "";
     document.getElementById("editDifficulty").value = String(recipe.difficulty || 3);
     document.getElementById("editCostLevel").value = String(recipe.costLevel || 3);
+    document.getElementById("editServings").value = recipe.servings || "";
     document.getElementById("editCuisine").value = recipe.cuisine || "";
 
     setSelectedOptions(dietaryGroup, recipe.dietaryOptionIds || []);
@@ -173,13 +267,19 @@ function createRecipeCard(recipe) {
     const title = document.createElement("strong");
     title.textContent = recipe.title;
 
+    const cuisine = document.createElement("span");
+    cuisine.className = "recipe-item-cuisine";
+    cuisine.textContent = recipe.cuisine || "Cuisine not set";
+
     const summary = document.createElement("span");
-    summary.textContent = `${recipe.cuisine} | ${recipe.preparationTimeMinutes} min | Difficulty ${recipe.difficulty}/5`;
+    summary.textContent =
+        `Prep ${formatDuration(recipe.preparationTimeMinutes)} | Cook ${formatDuration(recipe.cookingTimeMinutes)} | ${formatDifficulty(recipe.difficulty)}`;
 
     const updated = document.createElement("small");
     updated.textContent = `Updated ${formatDate(recipe.updatedAt)}`;
 
     button.appendChild(title);
+    button.appendChild(cuisine);
     button.appendChild(summary);
     button.appendChild(updated);
 
@@ -303,6 +403,42 @@ cancelEditButton.addEventListener("click", () => {
     showRecipeView();
 });
 
+deleteRecipeButton.addEventListener("click", async () => {
+    if (!currentRecipeId || !currentRecipeData) {
+        return;
+    }
+
+    const confirmed = window.confirm(
+        `Delete "${currentRecipeData.title}"?\n\nThis will permanently remove the recipe and its tags.`
+    );
+    if (!confirmed) {
+        return;
+    }
+
+    setViewMessage("Deleting recipe...", null);
+    try {
+        const response = await fetch(
+            `/api/recipes/${currentRecipeId}?email=${encodeURIComponent(userEmail)}`,
+            { method: "DELETE" }
+        );
+        const data = await response.json();
+        if (!response.ok) {
+            setViewMessage(data.error || "Unable to delete recipe.", "is-error");
+            return;
+        }
+
+        await loadRecipeList();
+        if (currentRecipes.length > 0) {
+            await selectRecipe(currentRecipes[0].id);
+            setViewMessage("Recipe deleted successfully.", "is-success");
+        } else {
+            showEmptyState("Recipe deleted. You have no published recipes.");
+        }
+    } catch (error) {
+        setViewMessage("Network error. Please try again.", "is-error");
+    }
+});
+
 recipeEditForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!currentRecipeId) {
@@ -315,16 +451,33 @@ recipeEditForm.addEventListener("submit", async (event) => {
         title: document.getElementById("editTitle").value.trim(),
         ingredients: document.getElementById("editIngredients").value.trim(),
         instructions: document.getElementById("editInstructions").value.trim(),
-        preparationTimeMinutes: Number(document.getElementById("editPreparationTimeMinutes").value),
+        preparationTimeMinutes: toMinutes(
+            document.getElementById("editPreparationTimeValue").value,
+            document.getElementById("editPreparationTimeUnit").value
+        ),
+        cookingTimeMinutes: toMinutes(
+            document.getElementById("editCookingTimeValue").value,
+            document.getElementById("editCookingTimeUnit").value
+        ),
         preparationSteps: Number(document.getElementById("editPreparationSteps").value),
         difficulty: Number(document.getElementById("editDifficulty").value),
         costLevel: Number(document.getElementById("editCostLevel").value),
+        servings: Number(document.getElementById("editServings").value),
         cuisine: document.getElementById("editCuisine").value.trim(),
         dietaryOptionIds: getSelectedIds(dietaryGroup),
         allergyOptionIds: getSelectedIds(allergyGroup)
     };
 
-    if (!payload.title || !payload.ingredients || !payload.instructions || !payload.cuisine) {
+    if (
+        !payload.title ||
+        !payload.ingredients ||
+        !payload.instructions ||
+        !payload.cuisine ||
+        !payload.preparationTimeMinutes ||
+        !payload.cookingTimeMinutes ||
+        !payload.preparationSteps ||
+        !payload.servings
+    ) {
         setEditMessage("Please complete all required fields.", "is-error");
         return;
     }
@@ -360,6 +513,8 @@ recipeEditForm.addEventListener("submit", async (event) => {
     }
 
     try {
+        bindDurationInputMode("editPreparationTimeValue", "editPreparationTimeUnit");
+        bindDurationInputMode("editCookingTimeValue", "editCookingTimeUnit");
         await loadOptions();
         await loadRecipeList();
 

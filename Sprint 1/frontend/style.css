@@ -409,6 +409,21 @@ textarea {
     color: var(--ink);
 }
 
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 38px;
+    background-image:
+        linear-gradient(45deg, transparent 50%, #67806b 50%),
+        linear-gradient(135deg, #67806b 50%, transparent 50%);
+    background-position:
+        calc(100% - 18px) calc(50% - 2px),
+        calc(100% - 12px) calc(50% - 2px);
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+}
+
 input:focus,
 select:focus,
 textarea:focus {
@@ -576,6 +591,12 @@ button:hover {
     letter-spacing: -0.1px;
 }
 
+.recipe-item-cuisine {
+    font-size: 0.92rem;
+    color: #2c7049;
+    font-weight: 700;
+}
+
 .recipe-item span,
 .recipe-item small {
     display: block;
@@ -611,6 +632,31 @@ button:hover {
 .recipe-post-header h2 {
     margin: 0;
     font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.recipe-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.recipe-cuisine-subheading {
+    margin: 6px 0 0;
+    color: #2d6f48;
+    font-weight: 700;
+    font-size: 0.98rem;
+}
+
+.servings-badge {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid #b8d6bf;
+    background: #ecf7ef;
+    color: #1e5b3b;
+    font-size: 0.88rem;
+    font-weight: 800;
 }
 
 .recipe-post-header .form-subtitle {
@@ -731,10 +777,37 @@ button:hover {
     border: 1px solid #cadacb;
 }
 
+.action-btn-danger {
+    background: linear-gradient(120deg, #a53b31 0%, #c15044 100%);
+    color: #fff;
+}
+
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+}
+
+.form-grid input,
+.form-grid select {
+    height: 46px;
+    min-height: 46px;
+}
+
+.form-grid-full {
+    grid-column: 1 / -1;
+}
+
+.duration-input-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 132px;
+    gap: 8px;
+    align-items: center;
+}
+
+.duration-input-row input,
+.duration-input-row select {
+    margin-top: 0;
 }
 
 .empty-state {
@@ -777,6 +850,11 @@ button:hover {
 
     .recipe-metadata {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .recipe-title-row {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
 
