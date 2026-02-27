@@ -3,13 +3,28 @@ const userEmail = localStorage.getItem("userEmail");
 const guestHeroActions = document.getElementById("guestHeroActions");
 const authHeroActions = document.getElementById("authHeroActions");
 const currentPath = window.location.pathname;
+const protectedPaths = ["/profile", "/recipes/new", "/recipes/mine"];
+const guestOnlyPaths = ["/signin", "/signup"];
 
-if (userEmail && (currentPath === "/signin" || currentPath === "/signup")) {
+if (userEmail && guestOnlyPaths.includes(currentPath)) {
     window.location.replace("/profile");
 }
 
-if (!userEmail && currentPath === "/profile") {
+if (!userEmail && protectedPaths.includes(currentPath)) {
     window.location.replace("/signin");
+}
+
+function bindSignOut(linkId) {
+    const signOutLink = document.getElementById(linkId);
+    if (!signOutLink) {
+        return;
+    }
+
+    signOutLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        localStorage.removeItem("userEmail");
+        window.location.href = "/";
+    });
 }
 
 if (guestHeroActions && authHeroActions) {
@@ -24,19 +39,18 @@ if (guestHeroActions && authHeroActions) {
 
 if (authMenu && userEmail) {
     authMenu.innerHTML = `
+        <a class="nav-cta" href="/recipes/new">New Recipe</a>
         <div class="dropdown">
             <a class="dropdown__toggle" href="/profile">Profile</a>
             <div class="dropdown__menu">
                 <a href="/profile">Account</a>
+                <a href="/recipes/mine">My Recipes</a>
                 <a href="#" id="signOutLink">Sign Out</a>
             </div>
         </div>
     `;
 
-    const signOutLink = document.getElementById("signOutLink");
-    signOutLink.addEventListener("click", (event) => {
-        event.preventDefault();
-        localStorage.removeItem("userEmail");
-        window.location.reload();
-    });
+    bindSignOut("signOutLink");
+} else {
+    bindSignOut("staticSignOutLink");
 }
