@@ -10,13 +10,11 @@
 <header class="site-header">
     <a class="brand" href="/">MealMajor</a>
     <nav class="nav" id="authMenu">
-        <a class="nav-cta" href="/recipes/new">New Recipe</a>
         <div class="dropdown">
-            <a class="dropdown__toggle" href="/profile">Profile</a>
+            <a class="dropdown__toggle" href="/signin">Account</a>
             <div class="dropdown__menu">
-                <a href="/profile">Account</a>
-                <a href="/recipes/mine">My Recipes</a>
-                <a href="#" id="staticSignOutLink">Sign Out</a>
+                <a href="/signin">Sign In</a>
+                <a href="/signup">Sign Up</a>
             </div>
         </div>
     </nav>
@@ -28,6 +26,7 @@
             <h1>My Recipes</h1>
         </div>
         <p class="form-subtitle">Select a published recipe to preview it as a post.</p>
+        <a class="btn btn-primary recipe-panel-cta" href="/recipes/new">New Recipe</a>
         <div id="recipeList" class="recipe-list"></div>
     </section>
 
@@ -47,7 +46,7 @@
                     </div>
                     <div id="viewRecipeServings" class="servings-badge"></div>
                 </div>
-                <p id="viewRecipeUpdated" class="form-subtitle"></p>
+                <p id="viewRecipePublished" class="form-subtitle"></p>
             </header>
 
             <section class="recipe-metadata">
@@ -78,6 +77,9 @@
                 <div id="viewRecipeAllergies" class="tag-row"></div>
             </section>
 
+            <div class="recipe-updated-row">
+                <p id="viewRecipeUpdated" class="recipe-updated-note"></p>
+            </div>
             <div class="recipe-view-actions">
                 <button id="editRecipeButton" class="action-btn" type="button">Edit Recipe</button>
                 <button id="deleteRecipeButton" class="action-btn action-btn-danger" type="button">Delete Recipe</button>
@@ -158,10 +160,10 @@
                     </div>
 
                     <label for="editDietaryOptions">Dietary Preferences</label>
-                    <div id="editDietaryOptions" class="checkbox-group" role="group" aria-label="Recipe dietary preferences"></div>
+                    <div id="editDietaryOptions" class="checkbox-group dietary-group" role="group" aria-label="Recipe dietary preferences"></div>
 
                     <label for="editAllergyOptions">Allergies</label>
-                    <div id="editAllergyOptions" class="checkbox-group" role="group" aria-label="Recipe allergy tags"></div>
+                    <div id="editAllergyOptions" class="checkbox-group allergy-group" role="group" aria-label="Recipe allergy tags"></div>
                 </div>
 
                 <div class="recipe-edit-actions">

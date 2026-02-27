@@ -9,6 +9,7 @@ const recipeEditCard = document.getElementById("recipeEditCard");
 const viewRecipeTitle = document.getElementById("viewRecipeTitle");
 const viewRecipeCuisineSubheading = document.getElementById("viewRecipeCuisineSubheading");
 const viewRecipeServings = document.getElementById("viewRecipeServings");
+const viewRecipePublished = document.getElementById("viewRecipePublished");
 const viewRecipeUpdated = document.getElementById("viewRecipeUpdated");
 const viewRecipeTime = document.getElementById("viewRecipeTime");
 const viewRecipeCookingTime = document.getElementById("viewRecipeCookingTime");
@@ -197,7 +198,7 @@ function showRecipeEdit() {
     recipeEditCard.hidden = false;
 }
 
-function renderTagRow(container, names, emptyText) {
+function renderTagRow(container, names, emptyText, tagVariantClass = "") {
     container.innerHTML = "";
 
     if (names.length === 0) {
@@ -210,7 +211,7 @@ function renderTagRow(container, names, emptyText) {
 
     names.forEach((name) => {
         const tag = document.createElement("span");
-        tag.className = "recipe-tag";
+        tag.className = `recipe-tag ${tagVariantClass}`.trim();
         tag.textContent = name;
         container.appendChild(tag);
     });
@@ -226,6 +227,12 @@ function populateRecipeView(recipe) {
     viewRecipeTitle.textContent = recipe.title || "Untitled Recipe";
     viewRecipeCuisineSubheading.textContent = recipe.cuisine || "Cuisine not set";
     viewRecipeServings.textContent = `Serves ${recipe.servings || 1}`;
+    const publisher = recipe.authorName || "Unknown";
+    viewRecipePublished.textContent = "";
+    viewRecipePublished.appendChild(document.createTextNode("Published by "));
+    const publisherName = document.createElement("strong");
+    publisherName.textContent = publisher;
+    viewRecipePublished.appendChild(publisherName);
     viewRecipeUpdated.textContent = `Updated ${formatDate(recipe.updatedAt)}`;
     viewRecipeTime.textContent = formatDuration(recipe.preparationTimeMinutes);
     viewRecipeCookingTime.textContent = formatDuration(recipe.cookingTimeMinutes);
@@ -237,7 +244,7 @@ function populateRecipeView(recipe) {
 
     const dietNames = mapIdsToNames(recipe.dietaryOptionIds || [], dietaryNameById);
     const allergyNames = mapIdsToNames(recipe.allergyOptionIds || [], allergyNameById);
-    renderTagRow(viewRecipeDiets, dietNames, "No dietary tags");
+    renderTagRow(viewRecipeDiets, dietNames, "No dietary tags", "recipe-tag-dietary");
     renderTagRow(viewRecipeAllergies, allergyNames, "No allergy tags");
 }
 
@@ -271,16 +278,11 @@ function createRecipeCard(recipe) {
     cuisine.className = "recipe-item-cuisine";
     cuisine.textContent = recipe.cuisine || "Cuisine not set";
 
-    const summary = document.createElement("span");
-    summary.textContent =
-        `Prep ${formatDuration(recipe.preparationTimeMinutes)} | Cook ${formatDuration(recipe.cookingTimeMinutes)} | ${formatDifficulty(recipe.difficulty)}`;
-
     const updated = document.createElement("small");
     updated.textContent = `Updated ${formatDate(recipe.updatedAt)}`;
 
     button.appendChild(title);
     button.appendChild(cuisine);
-    button.appendChild(summary);
     button.appendChild(updated);
 
     button.addEventListener("click", () => {

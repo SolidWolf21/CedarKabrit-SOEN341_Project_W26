@@ -108,6 +108,10 @@ app.get("/recipes/mine", (req, res) => {
     res.sendFile(path.join(frontendDir, "my-recipes.html"));
 });
 
+app.get("/recipes/browse", (req, res) => {
+    res.sendFile(path.join(frontendDir, "browse-recipes.html"));
+});
+
 app.get("/health", (req, res) => {
     res.json({ status: "ok" });
 });
@@ -461,6 +465,153 @@ app.get("/api/recipes", async (req, res) => {
     }
 });
 
+app.get("/api/recipes/browse", async (req, res) => {
+    const email = normalizeEmail(req.query.email);
+    if (!email || !emailPattern.test(email)) {
+        return res.status(400).json({ error: "Valid email is required." });
+    }
+
+    try {
+        const pool = require("./db/connection");
+        const [users] = await pool.execute("SELECT id FROM users WHERE email = ? LIMIT 1", [email]);
+        if (!users || users.length === 0) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        const [rows] = await pool.execute(
+            `SELECT r.id,
+                    r.title,
+                    r.cuisine,
+                    r.preparation_time_minutes,
+                    r.cooking_time_minutes,
+                    r.preparation_steps,
+                    r.difficulty_rating,
+                    r.cost_level,
+                    r.servings,
+                    r.updated_at,
+                    u.first_name,
+                    u.last_name,
+                    u.email,
+                    (
+                        SELECT GROUP_CONCAT(d.name ORDER BY d.name SEPARATOR '||')
+                        FROM recipe_dietary_options rd
+                        INNER JOIN dietary_options d ON d.id = rd.dietary_option_id
+                        WHERE rd.recipe_id = r.id
+                    ) AS dietary_names
+             FROM recipes r
+             INNER JOIN users u ON u.id = r.user_id
+             ORDER BY r.updated_at DESC`
+        );
+
+        return res.json({
+            recipes: rows.map((row) => ({
+                id: row.id,
+                title: row.title,
+                cuisine: row.cuisine,
+                preparationTimeMinutes: row.preparation_time_minutes,
+                cookingTimeMinutes: row.cooking_time_minutes,
+                preparationSteps: row.preparation_steps,
+                difficulty: row.difficulty_rating,
+                costLevel: row.cost_level,
+                servings: row.servings,
+                updatedAt: row.updated_at,
+                authorName: `${row.first_name || ""} ${row.last_name || ""}`.trim(),
+                authorEmail: row.email,
+                dietaryOptions: row.dietary_names ? row.dietary_names.split("||") : []
+            }))
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Server error." });
+    }
+});
+
+app.get("/api/recipes/browse/:id", async (req, res) => {
+    const email = normalizeEmail(req.query.email);
+    const recipeId = toInt(req.params.id);
+    if (!email || !emailPattern.test(email)) {
+        return res.status(400).json({ error: "Valid email is required." });
+    }
+    if (!recipeId || recipeId < 1) {
+        return res.status(400).json({ error: "Valid recipe id is required." });
+    }
+
+    try {
+        const pool = require("./db/connection");
+        const [users] = await pool.execute("SELECT id FROM users WHERE email = ? LIMIT 1", [email]);
+        if (!users || users.length === 0) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        const [rows] = await pool.execute(
+            `SELECT r.id,
+                    r.title,
+                    r.ingredients,
+                    r.instructions,
+                    r.preparation_time_minutes,
+                    r.cooking_time_minutes,
+                    r.preparation_steps,
+                    r.difficulty_rating,
+                    r.cost_level,
+                    r.servings,
+                    r.cuisine,
+                    r.updated_at,
+                    u.first_name,
+                    u.last_name,
+                    u.email
+             FROM recipes r
+             INNER JOIN users u ON u.id = r.user_id
+             WHERE r.id = ?
+             LIMIT 1`,
+            [recipeId]
+        );
+
+        if (!rows || rows.length === 0) {
+            return res.status(404).json({ error: "Recipe not found." });
+        }
+
+        const [dietaryRows] = await pool.execute(
+            `SELECT d.name
+             FROM recipe_dietary_options rd
+             INNER JOIN dietary_options d ON d.id = rd.dietary_option_id
+             WHERE rd.recipe_id = ?
+             ORDER BY d.name`,
+            [recipeId]
+        );
+        const [allergyRows] = await pool.execute(
+            `SELECT a.name
+             FROM recipe_allergy_options ra
+             INNER JOIN allergy_options a ON a.id = ra.allergy_option_id
+             WHERE ra.recipe_id = ?
+             ORDER BY a.name`,
+            [recipeId]
+        );
+
+        const row = rows[0];
+        return res.json({
+            id: row.id,
+            title: row.title,
+            ingredients: row.ingredients,
+            instructions: row.instructions,
+            preparationTimeMinutes: row.preparation_time_minutes,
+            cookingTimeMinutes: row.cooking_time_minutes,
+            preparationSteps: row.preparation_steps,
+            difficulty: row.difficulty_rating,
+            costLevel: row.cost_level,
+            servings: row.servings,
+            cuisine: row.cuisine,
+            updatedAt: row.updated_at,
+            authorName: `${row.first_name || ""} ${row.last_name || ""}`.trim(),
+            authorEmail: row.email,
+            dietaryOptions: dietaryRows.map((item) => item.name),
+            allergyOptions: allergyRows.map((item) => item.name)
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Server error." });
+    }
+});
+
 app.get("/api/recipes/:id", async (req, res) => {
     const email = normalizeEmail(req.query.email);
     const recipeId = toInt(req.params.id);
@@ -486,7 +637,9 @@ app.get("/api/recipes/:id", async (req, res) => {
                     r.servings,
                     r.cuisine,
                     r.created_at,
-                    r.updated_at
+                    r.updated_at,
+                    u.first_name,
+                    u.last_name
              FROM recipes r
              INNER JOIN users u ON u.id = r.user_id
              WHERE r.id = ? AND u.email = ?
@@ -520,6 +673,7 @@ app.get("/api/recipes/:id", async (req, res) => {
             costLevel: row.cost_level,
             servings: row.servings,
             cuisine: row.cuisine,
+            authorName: `${row.first_name || ""} ${row.last_name || ""}`.trim(),
             dietaryOptionIds: dietaryRows.map((item) => item.id),
             allergyOptionIds: allergyRows.map((item) => item.id),
             createdAt: row.created_at,
