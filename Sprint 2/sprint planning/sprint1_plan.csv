@@ -1,8 +1,8 @@
 Issue #,User Story / Task Title,Description / Associated Tasks,Difficulty (0-1-2-3-5-8),Priority,Risk,Assign,Sprint,Due Date
-#11,US.04 - "User can Create, Edit and Delete recipes",Recipe CRUD UI + backend endpoints + DB recipes table,5,HIGH,"Medium - data validation and ownership checks required","Paul / Emile",2,"Feb 27 2026"
+#11,"US.04 - User can Create, Edit and Delete recipes",Recipe CRUD UI + backend endpoints + DB recipes table,5,HIGH,"Medium - data validation and ownership checks required","Paul / Emile",2,"Feb 27 2026"
 #14,Task.08 - Create Recipes Logic,POST /recipes endpoint + input validation + DB insert logic,3,HIGH,"Low - validation and saving data","Emile",2,"Feb 27 2026"
 #15,Task.09 - Recipe updates and deletes,PUT & DELETE /recipes endpoints + authorization checks,3,HIGH,"Medium - must ensure users can only modify their own recipes","Emile",2,"Feb 27 2026"
 #12,US.05 - User can search recipes,Search UI + backend query endpoint + indexed DB search,5,MED,"Medium - Improving search speed and handling incomplete matches","Emile / Elfried",2,"Feb 27 2026"
-#16,Task.10 - Profile page recipe search,Profile page recipe search,Frontend search bar + API integration,3,MED,"Low - mainly frontend integration","Emile",2,"Feb 27 2026"
+#16,Task.10 - Profile page recipe search,Frontend search bar + API integration,3,MED,"Low - mainly frontend integration","Emile",2,"Feb 27 2026"
 #13,US.06 - User can filter recipes,Filter UI + backend filtering logic (category, ingredients, etc.),5,MED,"Medium - medium to complex query combinations","Paul / Emile / Elfried",2,"Feb 27 2026"
 #17,Task.11 - Recipe filter,Backend filtering queries + DB indexing,3,HIGH,"Medium – performance and query correctness","Elfried",2,"Feb 27 2026"
