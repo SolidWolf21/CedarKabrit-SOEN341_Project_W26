@@ -1,8 +1,6 @@
 name: MealMajor CI
 
-on:
-  push:
-  pull_request:
+on: [push, pull_request]
 
 jobs:
   acceptance-tests:
@@ -15,13 +13,22 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Show where we are (debug)
+        run: |
+          pwd
+          ls -la
+          echo "----- package.json (root) -----"
+          cat package.json
+          echo "----- npm scripts -----"
+          npm run || true
+
+      - name: Install dependencies (root)
         run: npm install
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Start server and run tests
+      - name: Start server + run tests
         run: |
           npm run start &
           npx wait-on http://localhost:3000 --timeout 60000
