@@ -1,0 +1,76 @@
+# CedarKabrit — Sprint 2 Meeting Minutes
+
+**Sprint:** 2  
+**Course:** SOEN 341  
+
+
+## Attendees
+- Raphael Hadgu
+- Paul Haydn Louisma
+- Emile Ghattas
+- Mia Haidar
+- Elfried Jeffrey Kamdem Sindjoun
+
+
+
+## Session 1 — Sprint 2 Planning & Task Breakdown
+**Date:** 2026-02-27  
+**Type:** Sprint Planning / Working Session  
+
+### Topics Discussed
+- Review of Sprint 1 deliverables
+- Definition of Sprint 2 scope (Recipe features)
+- Breakdown of user stories into technical tasks
+- UI redesign requirements
+- Backend and database restructuring
+- Acceptance testing strategy
+
+### Outcomes
+- Sprint 2 focuses on:
+  - Recipe creation (Create Recipe page)
+  - Editing and deleting recipes
+  - Browse Recipes page
+  - My Recipes page
+  - Search functionality
+  - Filter functionality
+- Tasks refined and assigned
+- Backend restructuring approved
+- Database updates aligned with recipe features
+- Acceptance testing prepared
+
+
+## Work Contributions
+
+### Mia Haidar
+- Drafted and refined user stories
+- Worked on sprint tasks
+- Designed and executed acceptance tests
+
+### Raphael Hadgu
+- Participated in sprint planning
+- Organized GitHub structure and design improvements
+
+### Emile Ghattas
+- Redesigned UI
+- Restructured backend, database, and Express server
+- Implemented:
+  - My Recipes page
+  - Browse Recipes page
+  - Create Recipe page
+- Integrated frontend with backend and database
+
+### Elfried Jeffrey Kamdem Sindjoun
+- Prepared Sprint 2 meeting minutes
+- Contributed to acceptance test validation and documentation
+
+## Decisions
+- US.04, US.05, and US.06 confirmed for Sprint 2
+- Authorization checks required for recipe updates and deletions
+- Indexed database queries to improve search and filtering performance
+- GitHub issues updated to reflect task ownership
+
+## Notes
+- Sprint 2 deadline: February 27, 2026
+- Acceptance tests completed
+- All members updated their activity logs
+- Sprint deliverables aligned with planned scope
