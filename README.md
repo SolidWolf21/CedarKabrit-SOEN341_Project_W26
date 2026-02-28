@@ -68,3 +68,5 @@ To insert built-in recipes that appear in **Browse Recipes**:
 ```bash
 npm run seed:defaults
 ```
+
+CI rerun
