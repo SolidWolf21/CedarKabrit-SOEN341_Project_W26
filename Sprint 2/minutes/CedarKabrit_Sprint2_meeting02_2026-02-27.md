@@ -1,120 +1,82 @@
-CedarKabrit — Sprint 2 Meeting Minutes
+# CedarKabrit — Sprint 2 Meeting Minutes
 
-Sprint: 2
-Course: SOEN 341
+**Sprint:** 2  
+**Course:** SOEN 341  
 
-Attendees
+---
 
-Raphael Hadgu
+## Attendees
+- Raphael Hadgu
+- Paul Haydn Louisma
+- Emile Ghattas
+- Mia Haidar
+- Elfried Jeffrey Kamdem Sindjoun
 
-Paul Haydn Louisma
+---
 
-Emile Ghattas
+## Session 1 — Sprint 2 Planning & Task Breakdown
+**Date:** 2026-02-27  
+**Type:** Sprint Planning / Working Session  
 
-Mia Haidar
+### Topics Discussed
+- Review of Sprint 1 deliverables
+- Definition of Sprint 2 scope (Recipe features)
+- Breakdown of user stories into technical tasks
+- UI redesign requirements
+- Backend and database restructuring
+- Acceptance testing strategy
 
-Elfried Jeffrey Kamdem Sindjoun
+### Outcomes
+- Sprint 2 focuses on:
+  - Recipe creation (Create Recipe page)
+  - Editing and deleting recipes
+  - Browse Recipes page
+  - My Recipes page
+  - Search functionality
+  - Filter functionality
+- Tasks refined and assigned
+- Backend restructuring approved
+- Database updates aligned with recipe features
+- Acceptance testing prepared
 
-Meeting Sessions
-Session 1 — Sprint Planning & Implementation Coordination
+---
 
-Date: 2026-02-27 (Friday)
-Type: Working / Sprint Planning Session
+## Work Contributions
 
-Topics discussed:
+### Mia Haidar
+- Drafted and refined user stories
+- Worked on sprint tasks
+- Designed and executed acceptance tests
 
-Review of Sprint 1 completion and feedback
+### Raphael Hadgu
+- Participated in sprint planning
+- Organized GitHub structure and design improvements
 
-Definition of Sprint 2 scope (Recipe features)
+### Emile Ghattas
+- Redesigned UI
+- Restructured backend, database, and Express server
+- Implemented:
+  - My Recipes page
+  - Browse Recipes page
+  - Create Recipe page
+- Integrated frontend with backend and database
 
-Recipe CRUD functionality (Create, Edit, Delete)
+### Elfried Jeffrey Kamdem Sindjoun
+- Prepared Sprint 2 meeting minutes
+- Contributed to acceptance test validation and documentation
 
-Search and filtering functionality
+---
 
-UI redesign and backend restructuring
+## Decisions
+- US.04, US.05, and US.06 confirmed for Sprint 2
+- Authorization checks required for recipe updates and deletions
+- Indexed database queries to improve search and filtering performance
+- GitHub issues updated to reflect task ownership
 
-Database updates and authorization requirements
+---
 
-Acceptance testing planning
-
-Outcomes:
-
-Sprint 2 will focus on:
-
-Recipe creation
-
-Recipe editing and deletion
-
-Browse Recipes page
-
-My Recipes page
-
-Search functionality
-
-Filtering functionality
-
-User stories for recipe management were refined
-
-Backend restructuring was approved to improve scalability
-
-Database modifications were implemented to support recipes
-
-Acceptance tests were defined and executed
-
-Session 2 — Tutorial Coordination
-
-Date: Fridays (recurring)
-Time: 13:15 – 14:05
-
-Purpose:
-
-Clarification of Sprint 2 requirements
-
-Validation of Agile task breakdown
-
-Alignment with grading expectations
-
-Session 3 — Lab Coordination
-
-Date: Fridays (recurring)
-Time: 17:45 – 19:25
-
-Purpose:
-
-Technical discussions regarding backend restructuring
-
-UI redesign review and integration
-
-Database indexing for search and filtering
-
-Team progress updates and issue tracking
-
-Decisions
-
-User stories US.04, US.05, and US.06 were approved for Sprint 2
-
-Authorization checks required for recipe update and delete operations
-
-Indexed queries required for search and filter performance
-
-Responsibilities were assigned as follows:
-
-Frontend (UI): Paul Haydn Louisma, Emile Ghattas
-
-Backend & Database: Emile Ghattas, Elfried Jeffrey Kamdem Sindjoun
-
-Documentation & Minutes: Elfried Jeffrey Kamdem Sindjoun
-
-User Stories & Acceptance Tests: Mia Haidar
-
-GitHub Structure & Planning: Raphael Hadgu
-
-Notes
-
-Sprint 2 deadline: February 27, 2026
-
-Acceptance tests were completed
-
-GitHub issues reflect Sprint 2 task assignments
-
-Each team member maintained their activity log
+## Notes
+- Sprint 2 deadline: February 27, 2026
+- Acceptance tests completed
+- All members updated their activity logs
+- Sprint deliverables aligned with planned scope
