@@ -28,14 +28,13 @@
 
 | Date | Activity | Time |
 |------|---------|------|
-| 2026-02-27 | Setting up express and nodemon server | 30m |
-| 2026-02-27 | Make sql tables and sign up functionality | 2h |
-| 2026-02-27 | Sign in page and profile page with new sql tables | 2h |
+| 2026-02-27 | Redesigning UI | 1h |
+| 2026-02-27 | Restructuring database, backend and express server | 1h |
+| 2026-02-27 | Creating My Recipes page, Browse Recipes Page and Create Recipe page and linking them to database | 2h |
 
 
 # Sprint 2 Activity Log — Paul Haydn Louisma
 
 | Date | Activity | Time |
 |------|---------|------|
-| 2026-01-27 | Created the git hub | 20m |
-| 2026-02-27 | Base code for web page system | 3h |
+| 2026-01-27 | Made all tasks | 1h |
