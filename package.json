@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node \"Sprint 1/backend/server.js\"",
     "dev": "nodemon \"Sprint 1/backend/server.js\"",
-    "seed:defaults": "node \"Sprint 2/backend/db/seed-default-recipes.js\""
+    "seed:defaults": "node \"Sprint 2/backend/db/seed-default-recipes.js\"",
+    "test:acceptance": "playwright test",
+    "test": "npm run test:acceptance"
+
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -15,6 +18,8 @@
     "mysql2": "^3.11.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "@playwright/test": "^1.41.0",
+    "wait-on": "^7.2.0"
   }
 }
