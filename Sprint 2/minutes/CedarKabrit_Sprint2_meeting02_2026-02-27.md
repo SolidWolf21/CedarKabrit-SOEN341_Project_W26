@@ -22,6 +22,7 @@
 - Review of Sprint 1 deliverables
 - Definition of Sprint 2 scope (Recipe features)
 - Breakdown of user stories into technical tasks
+- Creation and refinement of task stories
 - UI redesign requirements
 - Backend and database restructuring
 - Acceptance testing strategy
@@ -34,10 +35,10 @@
   - My Recipes page
   - Search functionality
   - Filter functionality
-- Tasks refined and assigned
+- User stories and task stories refined and assigned
 - Backend restructuring approved
 - Database updates aligned with recipe features
-- Acceptance testing prepared
+- Acceptance testing prepared and executed
 
 ---
 
@@ -61,6 +62,10 @@
   - Create Recipe page
 - Integrated frontend with backend and database
 
+### Paul Haydn Louisma
+- Contributed to task stories refinement
+- Assisted in frontend-related sprint tasks
+
 ### Elfried Jeffrey Kamdem Sindjoun
 - Prepared Sprint 2 meeting minutes
 - Contributed to acceptance test validation and documentation
@@ -69,6 +74,7 @@
 
 ## Decisions
 - US.04, US.05, and US.06 confirmed for Sprint 2
+- Task stories created to improve implementation clarity
 - Authorization checks required for recipe updates and deletions
 - Indexed database queries to improve search and filtering performance
 - GitHub issues updated to reflect task ownership
