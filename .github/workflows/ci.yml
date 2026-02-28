@@ -25,4 +25,4 @@ jobs:
         run: |
           npm run start &
           npx wait-on http://localhost:3000 --timeout 60000
-          npm test
+          npm run test:acceptance
