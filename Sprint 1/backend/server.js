@@ -11,6 +11,10 @@ app.use(express.json());
 app.use(express.static(sprint1FrontendDir));
 app.use(express.static(sprint2FrontendDir));
 
+app.get("/favicon.ico", (req, res) => {
+    res.redirect(302, "/favicons/favicon.ico");
+});
+
 function normalizeEmail(rawEmail) {
     return (rawEmail || "").toString().trim().toLowerCase();
 }
