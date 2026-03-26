@@ -4,7 +4,7 @@
     const guestHeroActions = document.getElementById("guestHeroActions");
     const authHeroActions = document.getElementById("authHeroActions");
     const currentPath = window.location.pathname;
-    const protectedPaths = ["/profile", "/recipes/new", "/recipes/mine", "/recipes/browse"];
+    const protectedPaths = ["/profile", "/recipes/new", "/recipes/mine", "/recipes/browse", "/planner/weekly"];
     const guestOnlyPaths = ["/signin", "/signup"];
 
     if (userEmail && guestOnlyPaths.includes(currentPath)) {
@@ -41,6 +41,7 @@
     if (authMenu && userEmail) {
         authMenu.innerHTML = `
             <a class="nav-cta" href="/recipes/mine">My Recipes</a>
+            <a class="nav-cta" href="/planner/weekly">Weekly Meal Planner</a>
             <div class="dropdown">
                 <a class="dropdown__toggle" href="/profile">My Profile</a>
                 <div class="dropdown__menu">

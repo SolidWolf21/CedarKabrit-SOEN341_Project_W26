@@ -5,11 +5,15 @@ const app = express();
 const port = process.env.PORT || 3000;
 const sprint1FrontendDir = path.join(__dirname, "..", "frontend");
 const sprint2FrontendDir = path.join(__dirname, "..", "..", "Sprint 2", "frontend");
+const sprint3FrontendDir = path.join(__dirname, "..", "..", "Sprint 3", "frontend");
 const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+const mealPlannerMealTypes = new Set(["breakfast", "lunch", "dinner", "snack"]);
+const mealPlannerMealTypeOrder = ["breakfast", "lunch", "dinner", "snack"];
 
 app.use(express.json());
 app.use(express.static(sprint1FrontendDir));
 app.use(express.static(sprint2FrontendDir));
+app.use(express.static(sprint3FrontendDir));
 
 app.get("/favicon.ico", (req, res) => {
     res.redirect(302, "/favicons/favicon.ico");
@@ -35,6 +39,47 @@ function toIdArray(values) {
         .map((value) => toInt(value))
         .filter((value) => value && value > 0);
     return [...new Set(ids)];
+}
+
+function parseIsoDate(rawDate) {
+    const value = (rawDate || "").toString().trim();
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+    if (!match) {
+        return null;
+    }
+
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+    const parsed = new Date(Date.UTC(year, month - 1, day));
+
+    if (
+        parsed.getUTCFullYear() !== year ||
+        parsed.getUTCMonth() !== month - 1 ||
+        parsed.getUTCDate() !== day
+    ) {
+        return null;
+    }
+    return parsed;
+}
+
+function toIsoDate(parsedDate) {
+    const year = parsedDate.getUTCFullYear();
+    const month = String(parsedDate.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(parsedDate.getUTCDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
+
+function normalizeWeekStartDate(rawDate) {
+    const parsed = parseIsoDate(rawDate);
+    if (!parsed) {
+        return null;
+    }
+
+    const weekDay = parsed.getUTCDay();
+    const offsetToMonday = weekDay === 0 ? -6 : 1 - weekDay;
+    parsed.setUTCDate(parsed.getUTCDate() + offsetToMonday);
+    return toIsoDate(parsed);
 }
 
 function parseRecipePayload(body) {
@@ -116,6 +161,10 @@ app.get("/recipes/mine", (req, res) => {
 
 app.get("/recipes/browse", (req, res) => {
     res.sendFile(path.join(sprint2FrontendDir, "browse-recipes.html"));
+});
+
+app.get("/planner/weekly", (req, res) => {
+    res.sendFile(path.join(sprint3FrontendDir, "weekly-planner.html"));
 });
 
 app.get("/health", (req, res) => {
@@ -822,6 +871,214 @@ app.delete("/api/recipes/:id", async (req, res) => {
 
         await pool.execute("DELETE FROM recipes WHERE id = ?", [recipeId]);
         return res.json({ message: "Recipe deleted." });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Server error." });
+    }
+});
+
+app.get("/api/meal-planner/entries", async (req, res) => {
+    const email = normalizeEmail(req.query.email);
+    const weekStartDate = normalizeWeekStartDate(req.query.weekStartDate);
+
+    if (!email || !emailPattern.test(email)) {
+        return res.status(400).json({ error: "Valid email is required." });
+    }
+    if (!weekStartDate) {
+        return res.status(400).json({ error: "Valid week start date is required." });
+    }
+
+    try {
+        const pool = require("./db/connection");
+        const [users] = await pool.execute("SELECT id FROM users WHERE email = ? LIMIT 1", [email]);
+        if (!users || users.length === 0) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        const userId = users[0].id;
+        const [rows] = await pool.execute(
+            `SELECT i.id,
+                    i.day_of_week,
+                    i.meal_type,
+                    r.id AS recipe_id,
+                    r.title,
+                    r.cuisine,
+                    r.servings,
+                    r.preparation_time_minutes,
+                    r.cooking_time_minutes,
+                    u.first_name,
+                    u.last_name,
+                    u.email
+             FROM weekly_meal_plan_items i
+             INNER JOIN weekly_meal_plans p ON p.id = i.weekly_plan_id
+             INNER JOIN recipes r ON r.id = i.recipe_id
+             INNER JOIN users u ON u.id = r.user_id
+             WHERE p.user_id = ? AND p.week_start_date = ?
+             ORDER BY i.day_of_week ASC, FIELD(i.meal_type, ?, ?, ?, ?) ASC`,
+            [userId, weekStartDate, ...mealPlannerMealTypeOrder]
+        );
+
+        return res.json({
+            weekStartDate,
+            entries: rows.map((row) => ({
+                id: row.id,
+                dayOfWeek: row.day_of_week,
+                mealType: row.meal_type,
+                recipe: {
+                    id: row.recipe_id,
+                    title: row.title,
+                    cuisine: row.cuisine,
+                    servings: row.servings,
+                    preparationTimeMinutes: row.preparation_time_minutes,
+                    cookingTimeMinutes: row.cooking_time_minutes,
+                    authorName: `${row.first_name || ""} ${row.last_name || ""}`.trim(),
+                    authorEmail: row.email
+                }
+            }))
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Server error." });
+    }
+});
+
+app.put("/api/meal-planner/entries", async (req, res) => {
+    const email = normalizeEmail(req.body && req.body.email);
+    const weekStartDate = normalizeWeekStartDate(req.body && req.body.weekStartDate);
+    const dayOfWeek = toInt(req.body && req.body.dayOfWeek);
+    const mealType = ((req.body && req.body.mealType) || "").toString().trim().toLowerCase();
+    const recipeId = toInt(req.body && req.body.recipeId);
+
+    if (!email || !emailPattern.test(email)) {
+        return res.status(400).json({ error: "Valid email is required." });
+    }
+    if (!weekStartDate) {
+        return res.status(400).json({ error: "Valid week start date is required." });
+    }
+    if (dayOfWeek === null || dayOfWeek < 0 || dayOfWeek > 6) {
+        return res.status(400).json({ error: "Day of week must be between 0 and 6." });
+    }
+    if (!mealPlannerMealTypes.has(mealType)) {
+        return res
+            .status(400)
+            .json({ error: "Meal type must be one of: breakfast, lunch, dinner, snack." });
+    }
+    if (!recipeId || recipeId < 1) {
+        return res.status(400).json({ error: "Valid recipe id is required." });
+    }
+
+    let connection;
+    try {
+        const pool = require("./db/connection");
+        connection = await pool.getConnection();
+        await connection.beginTransaction();
+
+        const [users] = await connection.execute("SELECT id FROM users WHERE email = ? LIMIT 1", [email]);
+        if (!users || users.length === 0) {
+            await connection.rollback();
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        const userId = users[0].id;
+        const [recipes] = await connection.execute("SELECT id FROM recipes WHERE id = ? LIMIT 1", [recipeId]);
+        if (!recipes || recipes.length === 0) {
+            await connection.rollback();
+            return res.status(404).json({ error: "Recipe not found." });
+        }
+
+        const [planResult] = await connection.execute(
+            `INSERT INTO weekly_meal_plans (user_id, week_start_date)
+             VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id), updated_at = CURRENT_TIMESTAMP`,
+            [userId, weekStartDate]
+        );
+        const weeklyPlanId = Number(planResult.insertId);
+
+        const [slotRows] = await connection.execute(
+            `SELECT id
+             FROM weekly_meal_plan_items
+             WHERE weekly_plan_id = ? AND day_of_week = ? AND meal_type = ?
+             LIMIT 1`,
+            [weeklyPlanId, dayOfWeek, mealType]
+        );
+        const currentSlotEntryId = slotRows && slotRows.length > 0 ? Number(slotRows[0].id) : null;
+
+        const [duplicateRows] = await connection.execute(
+            `SELECT id
+             FROM weekly_meal_plan_items
+             WHERE weekly_plan_id = ? AND recipe_id = ? AND id <> ?
+             LIMIT 1`,
+            [weeklyPlanId, recipeId, currentSlotEntryId || 0]
+        );
+        if (duplicateRows && duplicateRows.length > 0) {
+            await connection.rollback();
+            return res.status(409).json({
+                error: "This recipe is already assigned in the selected week. Pick a different recipe."
+            });
+        }
+
+        let entryId = currentSlotEntryId;
+        if (currentSlotEntryId) {
+            await connection.execute(
+                "UPDATE weekly_meal_plan_items SET recipe_id = ? WHERE id = ?",
+                [recipeId, currentSlotEntryId]
+            );
+        } else {
+            const [insertResult] = await connection.execute(
+                `INSERT INTO weekly_meal_plan_items (weekly_plan_id, recipe_id, day_of_week, meal_type)
+                 VALUES (?, ?, ?, ?)`,
+                [weeklyPlanId, recipeId, dayOfWeek, mealType]
+            );
+            entryId = Number(insertResult.insertId);
+        }
+
+        await connection.commit();
+        return res.json({ message: "Meal saved to planner.", entryId, weekStartDate });
+    } catch (error) {
+        if (connection) {
+            await connection.rollback();
+        }
+        if (error && error.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({
+                error: "This recipe is already assigned in the selected week. Pick a different recipe."
+            });
+        }
+        console.error(error);
+        return res.status(500).json({ error: "Server error." });
+    } finally {
+        if (connection) {
+            connection.release();
+        }
+    }
+});
+
+app.delete("/api/meal-planner/entries/:id", async (req, res) => {
+    const email = normalizeEmail(req.query.email);
+    const entryId = toInt(req.params.id);
+
+    if (!email || !emailPattern.test(email)) {
+        return res.status(400).json({ error: "Valid email is required." });
+    }
+    if (!entryId || entryId < 1) {
+        return res.status(400).json({ error: "Valid planner entry id is required." });
+    }
+
+    try {
+        const pool = require("./db/connection");
+        const [result] = await pool.execute(
+            `DELETE i
+             FROM weekly_meal_plan_items i
+             INNER JOIN weekly_meal_plans p ON p.id = i.weekly_plan_id
+             INNER JOIN users u ON u.id = p.user_id
+             WHERE i.id = ? AND u.email = ?`,
+            [entryId, email]
+        );
+
+        if (!result || result.affectedRows === 0) {
+            return res.status(404).json({ error: "Planner entry not found." });
+        }
+
+        return res.json({ message: "Meal removed from planner." });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Server error." });

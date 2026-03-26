@@ -55,6 +55,31 @@ CREATE TABLE IF NOT EXISTS recipes (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS weekly_meal_plans (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    week_start_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_weekly_meal_plans_user_week (user_id, week_start_date),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS weekly_meal_plan_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    weekly_plan_id INT NOT NULL,
+    recipe_id INT NOT NULL,
+    day_of_week TINYINT NOT NULL,
+    meal_type ENUM('breakfast', 'lunch', 'dinner', 'snack') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_weekly_meal_plan_slot (weekly_plan_id, day_of_week, meal_type),
+    UNIQUE KEY uq_weekly_meal_plan_recipe (weekly_plan_id, recipe_id),
+    CHECK (day_of_week BETWEEN 0 AND 6),
+    FOREIGN KEY (weekly_plan_id) REFERENCES weekly_meal_plans(id) ON DELETE CASCADE,
+    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+);
+
 SET @has_cooking_time := (
     SELECT COUNT(*)
     FROM INFORMATION_SCHEMA.COLUMNS
