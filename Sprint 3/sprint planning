@@ -1,0 +1,11 @@
+Issue #,User Story / Task Title,Description / Associated Tasks,Difficulty (0-1-2-3-5-8),Priority,Risk,Assign,Sprint,Due Date
+#21,US.07 - User can Create weekly meal plans,Meal plan UI + backend endpoints + DB meal plans table,5,HIGH,"Medium - data structure and date/week handling","Elfrid / Emile",3,"Mar 27 2026"
+#15,Task.12 - Create weekly meal plan logic,POST /meal plans endpoint + input validation + DB insert logic,3,HIGH,"Low - Data must be saved to the account","Emile",3,"Mar 27 2026"
+#26,Task.13 - Structure weekly plan,DB schema design for weekly plan + meal slots modeling,3,MED,"Low - schema decisions affect future flexibility","Paul",3,"Mar 27 2026"
+#22,US.08 - User can edit and remove recipes from plan,Edit/remove UI + PUT & DELETE endpoints for plan entries,5,HIGH,"Medium - must handle partial updates without breaking plan integrity","Paul / Emile",3,"Mar 27 2026"
+#27,Task.14 - Modify weekly plan,PUT & DELETE /meal-plans endpoints + authorization checks,3,MED,"Low - plan consistency checks","Emile",3,"Mar 27 2026"
+#23,US.09 - User can view other users recipes,Public recipe browsing UI + backend read endpoint,5,MED,"Low - read-only, but privacy/visibility rules need defining","Emile / Elfried",3,"Mar 27 2026"
+#28,Task.15 - Ability to view other users recipes,GET /users/:id/recipes endpoint + visibility filtering,8,HIGH,"High - ability to view other users recipe without editing","Emile",3,"Mar 27 2026"
+#29,Task.16 - Ability to view other users recipes (special feature),Extended recipe view with social/sharing features,3,MED,"Medium - view other users recipe without editing it","Paul / Elfried",3,"Mar 27 2026"
+#24,US.10 - User can prevent duplicate recipes,Duplicate detection UI warning + backend uniqueness check,3,MED,"Medium - defining what counts as a duplicate","Paul / Emile",3,"Mar 27 2026"
+#30,Task.17 - Blocking recipe duplication,Backend duplicate detection logic + DB uniqueness constraints,3,LOW,"Low","Emile",3,"Mar 27 2026"
