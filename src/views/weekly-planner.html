@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealMajor | Weekly Meal Planner</title>
+    <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
+    <link rel="shortcut icon" href="/favicons/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="MealMajor" />
+    <link rel="manifest" href="/favicons/site.webmanifest" />
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="/" aria-label="MealMajor home">
+        <img class="brand__logo" src="/images/brand-logo.png" alt="MealMajor">
+    </a>
+    <nav class="nav" id="authMenu">
+        <div class="dropdown">
+            <a class="dropdown__toggle" href="/signin">Account</a>
+            <div class="dropdown__menu">
+                <a href="/signin">Sign In</a>
+                <a href="/signup">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="page-shell planner-page">
+    <section class="planner-page-header">
+        <p class="eyebrow">Meal Schedule</p>
+        <h1>Weekly Meal Planner</h1>
+        <p class="form-subtitle">Assign recipes to a day and meal type. Each day updates instantly after changes.</p>
+    </section>
+
+    <section class="planner-grid-card">
+        <div class="planner-grid-header">
+            <div>
+                <p id="plannerWeekEyebrow" class="eyebrow planner-grid-eyebrow">Current Week</p>
+                <h2 id="plannerWeekLabel">Loading week...</h2>
+            </div>
+            <div class="planner-week-actions">
+                <button id="plannerPrevWeekButton" type="button" class="action-btn action-btn-secondary">Previous Week</button>
+                <button id="plannerNextWeekButton" type="button" class="action-btn action-btn-secondary">Next Week</button>
+            </div>
+        </div>
+
+        <form id="plannerForm" class="planner-form-row" novalidate>
+            <div class="planner-form-field">
+                <label for="plannerWeekDate">Week</label>
+                <input id="plannerWeekDate" name="plannerWeekDate" type="date" required>
+            </div>
+
+            <div class="planner-form-field">
+                <label for="plannerDayOfWeek">Day</label>
+                <select id="plannerDayOfWeek" name="plannerDayOfWeek" required>
+                    <option value="0">Monday</option>
+                    <option value="1">Tuesday</option>
+                    <option value="2">Wednesday</option>
+                    <option value="3">Thursday</option>
+                    <option value="4">Friday</option>
+                    <option value="5">Saturday</option>
+                    <option value="6">Sunday</option>
+                </select>
+            </div>
+
+            <div class="planner-form-field">
+                <label for="plannerMealType">Meal Type</label>
+                <select id="plannerMealType" name="plannerMealType" required>
+                    <option value="breakfast">Breakfast</option>
+                    <option value="lunch">Lunch</option>
+                    <option value="dinner">Dinner</option>
+                    <option value="snack">Snack</option>
+                </select>
+            </div>
+
+            <div class="planner-form-field planner-form-field-wide">
+                <label for="plannerRecipeId">Recipe</label>
+                <select id="plannerRecipeId" name="plannerRecipeId" required>
+                    <option value="">Loading recipes...</option>
+                </select>
+            </div>
+
+            <div class="planner-form-submit">
+                <button type="submit" class="action-btn">Save Meal</button>
+            </div>
+        </form>
+        <p id="plannerFormMessage" class="form-message" aria-live="polite"></p>
+        <p id="plannerGridMessage" class="form-message" aria-live="polite"></p>
+        <div id="plannerWeekGrid" class="planner-week-grid" aria-label="Weekly meal planner grid"></div>
+    </section>
+</main>
+
+<script src="/js/weekly-planner.js"></script>
+<script src="/js/site.js"></script>
+</body>
+</html>

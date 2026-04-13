@@ -25,18 +25,31 @@ npm install
 npm run dev
 ```
 
-The server runs at `http://localhost:3000` and serves the frontend from `Sprint 1/frontend`.
+The server runs at `http://localhost:3000`.
 
 ### Frontend
-The frontend is static files in:
-- `Sprint 1/frontend/index.html`
+The frontend runtime files are now organized as:
+- `src/views` for HTML views
+- `public/css` for styles
+- `public/js` for client-side scripts
+- `public/images` and `public/favicons` for static assets
+
+### Backend structure
+Server-side runtime files are now organized as:
+- `src/server.js` for app startup
+- `src/controllers/serverController.js` for route and controller logic
+- `src/models/db/connection.js` for database connection
+
+### Legacy sprint artifacts
+Historical sprint artifacts were moved out of the runtime tree and archived under:
+- `docs/archive/legacy-sprints`
 
 ## Database (MySQL)
 
 ### 1) Create the database and tables
 Make sure MySQL is running, then run:
 ```bash
-mysql -u root -p < "Sprint 1/backend/db/schema.sql"
+mysql -u root -p < "database/schema.sql"
 ```
 (Enter password `12345678` when prompted.)
 

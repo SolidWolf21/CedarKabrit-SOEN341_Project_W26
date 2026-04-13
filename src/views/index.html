@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MealMajor | Home</title>
+    <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
+    <link rel="shortcut icon" href="/favicons/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="MealMajor" />
+    <link rel="manifest" href="/favicons/site.webmanifest" />
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="/" aria-label="MealMajor home">
+        <img class="brand__logo" src="/images/brand-logo.png" alt="MealMajor">
+    </a>
+    <nav class="nav" id="authMenu">
+        <div class="dropdown">
+            <a class="dropdown__toggle" href="/signin">Account</a>
+            <div class="dropdown__menu">
+                <a href="/signin">Sign In</a>
+                <a href="/signup">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="page-shell home-page">
+    <section class="hero-card">
+        <p class="eyebrow">Student-friendly meal planning</p>
+        <h1>Plan meals, save money, and stay on track every week.</h1>
+        <p class="hero-copy">
+            MealMajor helps you build practical weekly meal plans, handle grocery lists, and
+            adapt to dietary needs without wasting time.
+        </p>
+        <div class="hero-actions" id="guestHeroActions">
+            <a class="btn btn-primary" href="/signup">Create Free Account</a>
+            <a class="btn btn-secondary" href="/signin">Sign In</a>
+        </div>
+        <div class="hero-actions" id="authHeroActions" hidden>
+            <a class="btn btn-primary" href="/recipes/browse">Browse Recipes</a>
+        </div>
+        <div class="hero-metrics">
+            <article>
+                <strong>7-day plans</strong>
+                <span>Structured around your class schedule.</span>
+            </article>
+            <article>
+                <strong>Custom preferences</strong>
+                <span>Dietary and allergy filters built in.</span>
+            </article>
+            <article>
+                <strong>Simple workflow</strong>
+                <span>Plan, shop, and cook with less friction.</span>
+            </article>
+        </div>
+    </section>
+
+    <section class="feature-grid">
+        <article class="feature-card">
+            <h2>Weekly Planning</h2>
+            <p>Build balanced plans you can actually follow, even on busy days.</p>
+        </article>
+        <article class="feature-card">
+            <h2>Preference Management</h2>
+            <p>Set dietary preferences and allergies once, then keep everything aligned.</p>
+        </article>
+        <article class="feature-card">
+            <h2>Faster Decisions</h2>
+            <p>Reduce daily decision fatigue with clear meal structure and organization.</p>
+        </article>
+    </section>
+</main>
+
+<script src="/js/site.js"></script>
+</body>
+</html>

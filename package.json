@@ -2,11 +2,11 @@
   "name": "mealmajor",
   "version": "1.0.0",
   "description": "MealMajor web app",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node \"Sprint 1/backend/server.js\"",
-    "dev": "nodemon \"Sprint 1/backend/server.js\"",
-    "seed:defaults": "node \"Sprint 2/backend/db/seed-default-recipes.js\"",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "seed:defaults": "node scripts/seed-default-recipes.js",
     "test:acceptance": "playwright test",
     "test": "npm run test:acceptance"
   },
