@@ -1,4 +1,5 @@
-const userEmail = localStorage.getItem("userEmail");
+const authSession = window.authSession;
+const userEmail = authSession ? authSession.getUserEmail() : localStorage.getItem("userEmail");
 const recipeForm = document.getElementById("recipeForm");
 const message = document.getElementById("formMessage");
 const dietaryGroup = document.getElementById("recipeDietaryOptions");

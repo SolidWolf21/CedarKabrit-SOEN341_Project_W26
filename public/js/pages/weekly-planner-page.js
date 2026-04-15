@@ -1,4 +1,5 @@
-const userEmail = localStorage.getItem("userEmail");
+const authSession = window.authSession;
+const userEmail = authSession ? authSession.getUserEmail() : localStorage.getItem("userEmail");
 
 const plannerForm = document.getElementById("plannerForm");
 const plannerWeekDateInput = document.getElementById("plannerWeekDate");

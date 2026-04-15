@@ -1,4 +1,5 @@
-const userEmail = localStorage.getItem("userEmail");
+const authSession = window.authSession;
+const userEmail = authSession ? authSession.getUserEmail() : localStorage.getItem("userEmail");
 const recipeList = document.getElementById("recipeList");
 
 const recipeEmptyState = document.getElementById("recipeEmptyState");
@@ -45,7 +46,11 @@ if (!userEmail) {
 if (staticSignOutLink) {
     staticSignOutLink.addEventListener("click", (event) => {
         event.preventDefault();
-        localStorage.removeItem("userEmail");
+        if (authSession) {
+            authSession.clearUserEmail();
+        } else {
+            localStorage.removeItem("userEmail");
+        }
         window.location.href = "/";
     });
 }

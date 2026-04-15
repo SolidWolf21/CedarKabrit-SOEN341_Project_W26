@@ -1,4 +1,5 @@
-const userEmail = localStorage.getItem("userEmail");
+const authSession = window.authSession;
+const userEmail = authSession ? authSession.getUserEmail() : localStorage.getItem("userEmail");
 const browseRecipeList = document.getElementById("browseRecipeList");
 const browseStatus = document.getElementById("browseStatus");
 const staticSignOutLink = document.getElementById("staticSignOutLink");
@@ -25,7 +26,11 @@ if (!userEmail) {
 if (staticSignOutLink) {
     staticSignOutLink.addEventListener("click", (event) => {
         event.preventDefault();
-        localStorage.removeItem("userEmail");
+        if (authSession) {
+            authSession.clearUserEmail();
+        } else {
+            localStorage.removeItem("userEmail");
+        }
         window.location.href = "/";
     });
 }

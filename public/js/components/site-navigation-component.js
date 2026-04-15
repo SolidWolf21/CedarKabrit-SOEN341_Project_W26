@@ -1,6 +1,7 @@
 (() => {
+    const authSession = window.authSession;
     const authMenu = document.getElementById("authMenu");
-    const userEmail = localStorage.getItem("userEmail");
+    const userEmail = authSession ? authSession.getUserEmail() : localStorage.getItem("userEmail");
     const guestHeroActions = document.getElementById("guestHeroActions");
     const authHeroActions = document.getElementById("authHeroActions");
     const currentPath = window.location.pathname;
@@ -23,7 +24,11 @@
 
         signOutLink.addEventListener("click", (event) => {
             event.preventDefault();
-            localStorage.removeItem("userEmail");
+            if (authSession) {
+                authSession.clearUserEmail();
+            } else {
+                localStorage.removeItem("userEmail");
+            }
             window.location.href = "/";
         });
     }

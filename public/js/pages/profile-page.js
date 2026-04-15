@@ -1,3 +1,4 @@
+const authSession = window.authSession;
 const form = document.getElementById("profileForm");
 const message = document.getElementById("formMessage");
 const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -12,7 +13,7 @@ function setMessage(text, type) {
     }
 }
 
-let storedEmail = localStorage.getItem("userEmail");
+let storedEmail = authSession ? authSession.getUserEmail() : localStorage.getItem("userEmail");
 if (!storedEmail) {
     window.location.href = "/signin";
 }
@@ -146,7 +147,11 @@ form.addEventListener("submit", async (event) => {
             return;
         }
 
-        localStorage.setItem("userEmail", email);
+        if (authSession) {
+            authSession.setUserEmail(email);
+        } else {
+            localStorage.setItem("userEmail", email);
+        }
         storedEmail = email;
         document.getElementById("password").value = "";
         setMessage("Profile updated successfully.", "is-success");

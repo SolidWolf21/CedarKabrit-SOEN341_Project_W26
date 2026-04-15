@@ -30,9 +30,14 @@ The server runs at `http://localhost:3000`.
 ### Frontend
 The frontend runtime files are now organized as:
 - `src/views` for HTML views
-- `public/css` for styles
-- `public/js` for client-side scripts
+- `public/css/base` for shared runtime styles
+- `public/js/pages` for page-specific scripts
+- `public/js/components` for reusable UI scripts
+- `public/js/utils` for shared client-side helpers
 - `public/images` and `public/favicons` for static assets
+
+Naming conventions are documented in:
+- `docs/naming-conventions.md`
 
 ### Backend structure
 Server-side runtime files are now organized as:

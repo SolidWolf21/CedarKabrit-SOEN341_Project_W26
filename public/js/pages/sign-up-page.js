@@ -1,4 +1,5 @@
-const form = document.getElementById("signinForm");
+const authSession = window.authSession;
+const form = document.getElementById("signupForm");
 const message = document.getElementById("formMessage");
 const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
@@ -13,6 +14,8 @@ function setMessage(text, type) {
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
@@ -28,31 +31,32 @@ form.addEventListener("submit", async (event) => {
         return;
     }
 
-    if (!password) {
-        setMessage("Please enter your password.", "is-error");
+    if (!firstName || !lastName || !password) {
+        setMessage("Please fill out all fields.", "is-error");
         return;
     }
 
-    setMessage("Signing in...", null);
+    setMessage("Submitting...", null);
 
     try {
-        const response = await fetch("/api/signin", {
+        const response = await fetch("/api/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ firstName, lastName, email, password })
         });
 
         const data = await response.json();
         if (!response.ok) {
-            setMessage(data.error || "Sign in failed.", "is-error");
+            setMessage(data.error || "Signup failed.", "is-error");
             return;
         }
 
-        localStorage.setItem("userEmail", email);
-        setMessage("Signed in successfully. Redirecting...", "is-success");
-        setTimeout(() => {
-            window.location.href = "/";
-        }, 800);
+        if (authSession) {
+            authSession.setUserEmail(email);
+        } else {
+            localStorage.setItem("userEmail", email);
+        }
+        window.location.href = "/";
     } catch (error) {
         setMessage("Network error. Please try again.", "is-error");
     }
